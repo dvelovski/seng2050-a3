@@ -1,0 +1,74 @@
+body{
+    margin: 0;
+    font-size: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #f5f5f5;
+
+    display: grid;
+    grid-template-rows: 4em auto;
+}
+header{
+    background: #1b1b1b;
+    color: #e0e0e0;
+    grid-row: 1;
+}
+.header_inner{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.group.search form{
+    margin: 0;
+    display: flex;
+}
+.group.search form input{
+    height: 2.5em;
+}
+.form_input.search{
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    border-right: 0;
+
+    width: 320px;
+}
+.form_input.search:focus{
+    outline: none;
+}
+.form_button.search{
+    border: 2px solid #0d47a1;
+    background: #2962ff;
+    color: white;
+    border-radius: 4px;
+
+    padding-left: 1em;
+    padding-right: 1em;
+}
+.no_left_border{
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+.no_right_border{
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+.header_inner .group{
+    display: flex;
+    align-items: stretch;
+}
+.header_inner .group.left{
+    margin-right: auto;
+}
+.header_inner .group.right{
+    margin-left: auto;
+}
+.header_item{
+    display: inline-flex;
+    padding: 0.5em;
+    align-items: center;
+}
+
+.header_item.hoverable:hover{
+    background-color: #e0e0e0;
+    color: #1b1b1b;
+}

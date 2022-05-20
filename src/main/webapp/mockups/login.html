@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Login Test</title>
+        <link rel="stylesheet" href="styles/assi3.css">
+    </head>
+    <body>
+        <header>
+            <div class="header_inner">
+                <div class="hgroup left">
+                    <span class="header_item logo clickable">
+                        Logo
+                    </span>
+                </div>    
+                <div class="hgroup search">
+                    <form class="header_item">
+                        <input type="search" id="header_search" class="tb_general form_input search" placeholder="Search...">
+                        <input type="submit" class="form_button search no_left_border" value="&#x1F50E;&#xFE0E;">
+                        <label for="header_search"></label>
+                    </form>               
+                </div>
+                <div class="hgroup right">
+                    <span class="header_item user_menu hoverable clickable unselectable">
+                        User
+                    </span>
+                    <span class="header_item user_logout hoverable clickable unselectable">
+                        Logout
+                    </span>
+                </div>
+            </div>
+        </header>
+        <div class="body_main">
+            <div class="body_box login_box">
+                <div class="form_header">
+                    <h2>Log in</h2>  
+                </div> 
+                <form>
+                    <div class="input_container_outer">
+                        <div class="input_container_inner flex_reverse">
+                            <input type="text" class="tb_general hide_left_border" placeholder="Username">
+                            <div class="input_container icon unselectable left_side">&#128100;</div>
+                        </div>
+                        <div class="input_container_error">
+                            Error
+                        </div>
+                    </div>
+                    <div class="input_container_outer">
+                        <div class="input_container_inner flex_reverse">
+                            <input type="password" class="tb_general hide_left_border" placeholder="Password">
+                            <div class="input_container icon unselectable left_side">&#128274;</div>
+                        </div>
+                        <div class="input_container_error">
+                            Error
+                        </div>
+                    </div>
+                    <div class="input_container_outer">
+                        <div class="input_container_inner">
+                            <input type="submit" class="login_submit_button" value="Log in">
+                            <div class="input_container icon unselectable right_side">&#10095;</div>
+                        </div>
+                    </div>                    
+                </form>
+                <h4>
+                    New to our system?
+                </h4>
+                <p>Please contact a member of IT staff to create a profile for you.</p>
+            </div>
+        </div>
+    </body>
+    <script>
+        // var splashButtons = document.querySelectorAll(".splash_button");
+        // for (var i = 0; i < splashButtons.length; i++){
+        //     console.log(splashButtons[i]);
+        //     createSplashObject(splashButtons[i]);
+        // }
+
+        // function createSplashObject(objIn){
+        //     var objParent = objIn.parentNode;
+        //     objParent.removeChild(objIn);
+
+        //     let splashContainer = document.createElement("span");
+        //     splashContainer.className = "splash_container";
+
+        //     let splashObject = document.createElement("div");
+        //     splashObject.className = "splash_object";
+
+        //     splashContainer.appendChild(objIn);
+        //     splashContainer.appendChild(splashObject);
+
+        //     objParent.appendChild(splashContainer);
+
+        //     objIn.addEventListener("click", function(e){
+        //         splashObject.classList.add("splashing");
+        //         let objWidth = objIn.clientWidth;
+        //         let objHeight = objIn.clientHeight; 
+                
+        //         splashObject.style.width = objWidth;
+        //         splashObject.style.height = objHeight;
+        //         splashObject.style.left = e.offsetX - (objWidth / 2);
+        //         splashObject.style.top = e.offsetY - (objHeight / 2);
+                
+        //         setTimeout(function(){
+                    
+        //             splashObject.classList.remove("splashing");
+                
+        //         }, 150);
+        //     });
+        // }
+    </script>
+</html>

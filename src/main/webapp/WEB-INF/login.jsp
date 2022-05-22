@@ -15,7 +15,7 @@
             <div class="form_header">
                 <h2>Log in</h2>  
             </div> 
-            <s:form action="login">
+            <s:form action="login" class="column">
                 <div class="input_container_outer">
                     <div class="input_container_inner flex_reverse">
                         <input type="text" name="loginUsername" type="text" class="tb_general hide_left_border" placeholder="Username" />

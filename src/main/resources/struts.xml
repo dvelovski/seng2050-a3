@@ -10,27 +10,61 @@
 
     <package name="default" extends="struts-default">
 
+        <interceptors>
+            <interceptor name="loginvalidator" class="org.a3.interceptors.LoginVerificationInterceptor"/>
+        </interceptors>
+
         <action name="index" class="org.a3.actions.IndexAction" method="execute">
-            <result name="logged_in" type="redirectAction">home</result>
+            <result name="logged_in" type="chain">home</result>
             <result name="no_login">/WEB-INF/login.jsp</result>
         </action>
-        <action name="login" class="org.a3.actions.LoginAction" method="execute">
-            <result name="success" type="redirectAction">home</result>
+
+        <action name="home" class="org.a3.actions.UserHomeAction" method="execute">
+            <result name="success">/WEB-INF/home.jsp</result>
             <result name="error">/WEB-INF/login.jsp</result>
         </action>
-        <action name="logout" class="org.a3.actions.LogoutAction" method="execute">
-            <result type="redirect">/</result>
-        </action>
+
         <action name="search" class="org.a3.actions.SearchAction" method="populate">
             <result name="success">/WEB-INF/search.jsp</result>
             <result name="no_login">/WEB-INF/login.jsp</result>
         </action>
-        <action name="home">
-            <result>/WEB-INF/home.jsp</result>
+        <!-- reportIssue returns the 'create issue' page -->
+
+        <action name="reportissue" class="org.a3.actions.CreateIssueAction" method="execute">
+            <result name="success">/WEB-INF/createissue.jsp</result>
+            <result name="forbidden" type="chain">403</result> <!-- 403 - forbidden - can't do this -->
+            <result name="unauthorized" type="chain">401</result>
         </action>
-        <action name="error">
-            <result></result>
+        <action name="submitissue">
+
         </action>
+
+        <action name="userview" class="org.a3.actions.ProfileAction" method="execute">
+            <result name="success">/WEB-INF/userview.jsp</result>
+            <result name="forbidden" type="chain">403</result>
+            <result name="unauthorized" type="chain">401</result>
+        </action>
+
+        <action name="knowledgebaseindex">
+
+        </action>
+
+        <action name="login" class="org.a3.actions.LoginAction" method="execute">
+            <result name="success" type="redirectAction">home</result>
+            <result name="error">/WEB-INF/login.jsp</result>
+        </action>
+
+        <action name="logout" class="org.a3.actions.LogoutAction" method="execute">
+            <result type="redirect">/</result>
+        </action>
+
+        <action name="401">
+            <result>/WEB-INF/unauthorized.jsp</result>
+        </action>
+        <action name="403">
+            <result>/WEB-INF/forbidden.jsp</result>
+        </action>
+
     </package>
 
 </struts>

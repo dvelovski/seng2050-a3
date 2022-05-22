@@ -1,6 +1,6 @@
 package org.a3.services;
 
-import org.a3.UserType;
+import org.a3.beans.UserType;
 
 import java.util.Map;
 
@@ -27,6 +27,9 @@ public class SessionManager {
     }
     public void setUserType(Map<String, Object> sessionMap, UserType uType){
         sessionMap.put(USER_TYPE_KEY, uType);
+    }
+    public UserType getUserType(Map<String, Object> sessionMap){
+        return (UserType) sessionMap.get(USER_TYPE_KEY);
     }
     public boolean isLoggedIn(Map<String, Object> sessionMap){
         return ((int) sessionMap.getOrDefault(LOGGED_IN_KEY, 0)) == 1;

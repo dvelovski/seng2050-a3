@@ -1,17 +1,13 @@
 package org.a3.actions;
 
-import com.opensymphony.xwork2.ActionSupport;
-import org.a3.UserType;
+import org.a3.beans.UserType;
 import org.a3.services.SessionManager;
-import org.apache.struts2.interceptor.SessionAware;
-
-import java.util.Map;
 
 public class LoginAction extends BaseSessionAwareAction {
     private String loginUsername = "";
     private String loginPassword = "";
 
-
+    private UserType userType;
 
 
     public void setLoginUsername(String loginUsername) {
@@ -31,11 +27,13 @@ public class LoginAction extends BaseSessionAwareAction {
             if (loginUsername.equals("abc")){
                 sm.setLoggedIn(userSessionObject, true);
                 sm.setUserType(userSessionObject, UserType.User);
+                userType = UserType.User;
                 return SUCCESS;
             }
             if (loginUsername.equals("asd")){
                 sm.setLoggedIn(userSessionObject, true);
-                sm.setUserType(userSessionObject, UserType.User);
+                sm.setUserType(userSessionObject, UserType.Staff);
+                userType = UserType.Staff;
                 return SUCCESS;
             }
         }else{

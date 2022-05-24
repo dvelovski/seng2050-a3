@@ -23,7 +23,7 @@ public class IssueReportsQuery
     {
         String query = "SELECT * FROM IssueReports";
         List<IssueReportBean> reports = new LinkedList<>();
-        try (Connection connection = ConfigBean.getConnection();
+        try (Connection connection = ConfigBean.get().getConnection();
              Statement statement = connection.createStatement();
              ResultSet result = statement.executeQuery(query);)
         {

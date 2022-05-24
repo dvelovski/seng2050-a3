@@ -26,7 +26,7 @@ public class UserHomeAction extends BaseSessionAwareAction{
                 case Staff:
                     homepageHeading = "My Assigned Issues";
                     showStatistics = true;
-                    issueReports = IssueReportsQuery.getAllIssueReports();
+                    //issueReports = IssueReportsQuery.getAllIssueReports();
                     break;
                 default:
                     homepageHeading = "My Issues";

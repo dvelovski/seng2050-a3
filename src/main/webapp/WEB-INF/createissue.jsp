@@ -1,7 +1,7 @@
-<!DOCTYPE html>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>Create New Issue</title>
@@ -17,10 +17,10 @@
                         <span class="issue_status_text new">new</span>
                     </div>
                 </div>
-                <form class="column article bar">
+                <s:form action="submitissue" class="column article bar" onsubmit="return validateIssueReport(this)" method="post" enctype="multipart/form-data">
                     <div class="input_container_outer">
                         <div class="input_container_desc">
-                            Issue title
+                            <label for="newIssueTitle">Issue title</label>
                             <span class="description_tooltip">?</span>
                             <div class="tooltip_outer">
                                 <div class="tooltip_inner">
@@ -29,13 +29,13 @@
                             </div>
                         </div>
                         <div class="input_container_inner shorter_elements">
-                            <input type="text" class="tb_general" placeholder="Title">
+                            <input type="text" class="tb_general" placeholder="Title" name="newIssueTitle" id="newIssueTitle">
                         </div>
                         <div class="input_container_error">Error</div>
                     </div>
                     <div class="input_container_outer">
                         <div class="input_container_desc">
-                            Issue category
+                            <label for="newIssueCategory">Issue category</label>
                             <span class="description_tooltip">?</span>
                             <div class="tooltip_outer">
                                 <div class="tooltip_inner">
@@ -44,8 +44,8 @@
                             </div>
                         </div>
                         <div class="input_container_inner shorter_elements">
-                            <select class="tb_general">
-                                <option value="" selected disabled hidden>Make a selection</option>
+                            <select class="tb_general" name="newIssueCategory" id="newIssueCategory">
+                                <option value="0" selected disabled hidden>Make a selection</option>
                                 <optgroup label="Network">
                                     <option value="1">Can't connect</option>
                                     <option value="2">Speed</option>
@@ -76,7 +76,7 @@
                     </div>
                     <div class="input_container_outer">
                         <div class="input_container_desc">
-                            Issue description
+                            <label for="newIssueDesc">Issue description</label>
                             <span class="description_tooltip">?</span>
                             <div class="tooltip_outer">
                                 <div class="tooltip_inner">
@@ -86,13 +86,13 @@
                             </div>
                         </div>
                         <div class="input_container_inner">
-                            <textarea class="eight_lines tb_general" placeholder="Description of your issue"></textarea>
+                            <textarea class="eight_lines tb_general" placeholder="Description of your issue" name="newIssueDesc" id="newIssueDesc" maxlength="4096"></textarea>
                         </div>
                         <div class="input_container_error">Error</div>
                     </div>
                     <div class="input_container_outer">
                         <div class="input_container_desc">
-                            Supporting files
+                            <label for="newIssueFiles">Supporting files</label>
                             <span class="description_tooltip">?</span>
                             <div class="tooltip_outer">
                                 <div class="tooltip_inner">
@@ -102,7 +102,7 @@
                             </div>
                         </div>
                         <div class="input_container_inner">
-                            <input type="file" name="issuefiles[]" multiple>
+                            <input type="file" name="issueFiles" id="newIssueFiles" multiple>
                         </div>
                         <div class="inner_attachmentbar">
 
@@ -115,50 +115,41 @@
                         </div>
 
                     </div>
-                </form>
+                </s:form>
             </div>
         </div>
+        <script>
+            let fileUploader = document.querySelectorAll("input[type='file']")[0];
+            let fileContainer = fileUploader.parentElement.nextElementSibling;
+            fileUploader.addEventListener("change", function(){
+                while (fileContainer.firstChild){
+                    fileContainer.removeChild(fileContainer.firstChild);
+                }
+                let fileList = fileUploader.files;
+                for (let i = 0; i < fileList.length; i++){
+                    let fileDiv = createFileRepresentation(fileList[i]);
+                    fileContainer.appendChild(fileDiv);
+                }
+            });
+            function createFileRepresentation(file){
+                let attachmentItem = document.createElement("div");
+                attachmentItem.classList.add("inline_attachment_item");
+
+                let attachmentIcon = document.createElement("div");
+                attachmentIcon.classList.add("attachment_icon");
+                attachmentIcon.innerHTML = "&#128206;";
+
+                let attachmentDetails = document.createElement("div");
+                attachmentDetails.classList.add("attachment_details");
+                attachmentDetails.innerHTML = file.name + "<br>" + file.size;
+
+                attachmentItem.appendChild(attachmentIcon);
+                attachmentItem.appendChild(attachmentDetails);
+
+                //TODO size units for files
+
+                return attachmentItem;
+            }
+        </script>
     </body>
-    <script>
-        var fileUploader = document.querySelectorAll("input[type='file']")[0];
-        var fileContainer = fileUploader.parentElement.nextElementSibling;
-        fileUploader.addEventListener("change", function(){
-            while (fileContainer.firstChild){
-                fileContainer.removeChild(fileContainer.firstChild);
-            }
-            let fileList = fileUploader.files;
-            for (let i = 0; i < fileList.length; i++){
-                let fileDiv = createFileRepresentation(fileList[i]);
-                fileContainer.appendChild(fileDiv);
-            }
-        });
-        function createFileRepresentation(file){
-            /*
-            <div class="inline_attachment_item">
-                            <div class="attachment_icon">
-                                &#128206;
-                            </div>
-                            <div class="attachment_details">
-                                Filename<br>
-                                xxx KB
-                            </div>
-                        </div>
-            */
-            let attachmentItem = document.createElement("div");
-            attachmentItem.classList.add("inline_attachment_item");
-
-            let attachmentIcon = document.createElement("div");
-            attachmentIcon.classList.add("attachment_icon");
-            attachmentIcon.innerHTML = "&#128206;";
-
-            let attachmentDetails = document.createElement("div");
-            attachmentDetails.classList.add("attachment_details");
-            attachmentDetails.innerHTML = file.name + "<br>" + file.size;
-
-            attachmentItem.appendChild(attachmentIcon);
-            attachmentItem.appendChild(attachmentDetails);
-
-            return attachmentItem;
-        }
-    </script>
 </html>

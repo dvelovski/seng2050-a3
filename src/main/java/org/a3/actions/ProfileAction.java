@@ -13,6 +13,8 @@ public class ProfileAction extends BaseSessionAwareAction{
     private String uLastName = "";
     private String uEmail = "";
     private String uPhone = "";
+
+    private String pageTitle;
     @Override
     public String doExecute() {
         SessionManager sm = SessionManager.get();
@@ -26,8 +28,10 @@ public class ProfileAction extends BaseSessionAwareAction{
         if (sm.isLoggedIn(userSessionObject)) {
             if (action.isEmpty()){
                 /* TODO if user is not staff, is this their own profile? If not, forbidden. */
+                pageTitle = "User details - " + userBean.getUserFirstName() + " " + userBean.getUserLastName();
                 return SUCCESS;
             }else if (action.equals("editor")){
+                pageTitle = "Editing user details";
                 return SUCCESS;
             }else if (action.equals("update")){
 
@@ -86,5 +90,9 @@ public class ProfileAction extends BaseSessionAwareAction{
 
     public UserBean getUserBean() {
         return userBean;
+    }
+
+    public String getPageTitle() {
+        return pageTitle;
     }
 }

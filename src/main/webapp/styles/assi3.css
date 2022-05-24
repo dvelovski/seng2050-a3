@@ -50,6 +50,9 @@ textarea.eight_lines{
 form.column{
     flex-direction: column;
 }
+.logo{
+    font-weight: bold;
+}
 .unselectable{
     -ms-user-select: none;
     -moz-user-select: none;
@@ -441,6 +444,7 @@ form.column{
     background: #00796b;
 }
 .issue_status_text.resolved{
+    background: #2962ff;
 }
 .issue_status_text.completed{
     background: #66bb6a;
@@ -564,7 +568,7 @@ form.column{
 }
 .user_icon_large_outer{
     border-radius: 4px;
-    background-color: #757575;
+    background: linear-gradient(-45deg, #1b1b1b, lightgray);
     color: white;
     width: 6em;
     height: 6em;

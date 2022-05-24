@@ -23,7 +23,7 @@ public class CommentsQuery {
     public static List<CommentsBean> getComments() {
         String query = "SELECT * FROM Comments";
         List<CommentsBean> comments = new LinkedList<>();
-        try (Connection connection = ConfigBean.getConnection();
+        try (Connection connection = ConfigBean.get().getConnection();
              Statement statement = connection.createStatement();
              ResultSet result = statement.executeQuery(query);) {
             while (result.next()) //Iterate over and collect all data from each tuple in table

@@ -24,17 +24,31 @@ public class LoginAction extends BaseSessionAwareAction {
 
         if (!sm.isLoggedIn(userSessionObject)){
             /* authentication flow */
-            if (loginUsername.equals("abc")){
-                sm.setLoggedIn(userSessionObject, true);
-                sm.setUserType(userSessionObject, UserType.User);
-                userType = UserType.User;
-                return SUCCESS;
+            boolean proceed  = true;
+            if (loginUsername.isEmpty()){
+                System.out.println("adding field error - username");
+                addFieldError("loginUsername", "Username may not be blank.");
+                proceed = false;
             }
-            if (loginUsername.equals("asd")){
-                sm.setLoggedIn(userSessionObject, true);
-                sm.setUserType(userSessionObject, UserType.Staff);
-                userType = UserType.Staff;
-                return SUCCESS;
+            if (loginPassword.isEmpty()) {
+                System.out.println("adding field error - passw");
+                addFieldError("loginPassword", "Password must be specified.");
+                proceed = false;
+            }
+            if (proceed){
+                if (loginUsername.equals("abc")){
+                    sm.setLoggedIn(userSessionObject, true);
+                    sm.setUserType(userSessionObject, UserType.User);
+                    userType = UserType.User;
+                    return SUCCESS;
+                }else if (loginUsername.equals("asd")){
+                    sm.setLoggedIn(userSessionObject, true);
+                    sm.setUserType(userSessionObject, UserType.Staff);
+                    userType = UserType.Staff;
+                    return SUCCESS;
+                }else{
+                    addFieldError("loginGeneral", "The username or password was incorrect.");
+                }
             }
         }else{
             return SUCCESS;

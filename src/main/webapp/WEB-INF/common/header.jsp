@@ -1,6 +1,6 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <s:url action="userview" var="user_link">
-    <s:param name="userID">1</s:param>
+    <s:param name="userID" value="#session.userBean.userIdentification" />
 </s:url>
 <s:url action="index" var="index_link" />
 <script src="scripts/validators.js"></script>
@@ -10,6 +10,7 @@
             <s:a href="%{#index_link}" class="header_item logo clickable">
                 SENG2050_A3
             </s:a>
+            <s:property value="#session.userBean.userIdentification"/>
         </div>
         <s:if test="#session.loggedIn != 0">
             <div class="hgroup search">

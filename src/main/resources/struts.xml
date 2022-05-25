@@ -64,6 +64,22 @@
             <result name="forbidden" type="chain">403</result>
             <result name="unauthorized" type="chain">401</result>
         </action>
+        <action name="userupdate" class="org.a3.actions.ProfileUpdateAction" method="execute">
+            <result name="success" type="redirectAction">
+                <param name="actionName">userview</param>
+                <param name="userID">${userID}</param>
+            </result>
+            <result name="forbidden" type="chain">403</result>
+            <result name="unauthorized" type="chain">401</result>
+            <result name="error" type="redirectAction">
+                <param name="actionName">userview</param>
+                <param name="action">editor</param>
+                <param name="uFirstName">${uFirstName}</param>
+                <param name="uLastName">${uLastName}</param>
+                <param name="uEmail">${uEmail}</param>
+                <param name="uPhone">${uPhone}</param>
+            </result>
+        </action>
 
         <action name="knowledgebaseindex">
 

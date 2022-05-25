@@ -51,14 +51,5 @@
                 <p>Please contact a member of IT staff to create a profile for you.</p>
             </div>
         </div>
-        <script>
-            let errorDivs = document.querySelectorAll(".input_container_error");
-            for (let i = 0; i < errorDivs.length; i++){
-                if (errorDivs[i].innerHTML.trim().length > 0){
-                    errorDivs[i].style.display = "block";
-                    fieldsWithErrors.push(errorDivs[i]);
-                }
-            }
-        </script>
     </body>
 </html>

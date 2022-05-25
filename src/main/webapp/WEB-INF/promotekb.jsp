@@ -88,7 +88,7 @@
             </div>
             <div class="input_container_outer">
                 <div class="input_container_inner">
-                    <input type="submit" value="Send to Knowledge Base" class="no_right_border">
+                    <input type="submit" value="Add to Knowledge Base" class="no_right_border">
                     <div class="input_container icon unselectable right_side">&#10095;</div>
                 </div>
             </div>

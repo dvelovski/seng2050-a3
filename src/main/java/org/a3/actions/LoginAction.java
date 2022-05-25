@@ -1,7 +1,11 @@
 package org.a3.actions;
 
+import org.a3.beans.UserBean;
 import org.a3.beans.UserType;
+import org.a3.queries.UserQuery;
 import org.a3.services.SessionManager;
+
+import java.sql.SQLException;
 
 public class LoginAction extends BaseSessionAwareAction {
     private String loginUsername = "";
@@ -35,19 +39,21 @@ public class LoginAction extends BaseSessionAwareAction {
                 addFieldError("loginPassword", "Password must be specified.");
                 proceed = false;
             }
+
             if (proceed){
-                if (loginUsername.equals("abc")){
-                    sm.setLoggedIn(userSessionObject, true);
-                    sm.setUserType(userSessionObject, UserType.User);
-                    userType = UserType.User;
-                    return SUCCESS;
-                }else if (loginUsername.equals("asd")){
-                    sm.setLoggedIn(userSessionObject, true);
-                    sm.setUserType(userSessionObject, UserType.Staff);
-                    userType = UserType.Staff;
-                    return SUCCESS;
-                }else{
-                    addFieldError("loginGeneral", "The username or password was incorrect.");
+                try {
+                    UserBean result = new UserQuery().loginQuery(loginUsername, loginPassword);
+                    if (result != null){
+                        sm.setLoggedIn(userSessionObject, true);
+                        sm.setUserBean(userSessionObject, result);
+
+                        return SUCCESS;
+                    }else{
+                        addFieldError("loginGeneral", "The username or password was incorrect.");
+                    }
+                } catch (SQLException e) {
+                    addFieldError("loginGeneral", e.getMessage());
+                    e.printStackTrace();
                 }
             }
         }else{

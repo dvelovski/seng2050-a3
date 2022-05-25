@@ -8,6 +8,9 @@ public class ConfigBean
 {
     private static ConfigBean instance;
     private final DataSource dataSource = makeDataSource();
+    static{
+
+    }
     private DataSource makeDataSource()
     {
         try

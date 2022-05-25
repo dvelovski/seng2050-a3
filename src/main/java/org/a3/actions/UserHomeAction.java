@@ -1,6 +1,7 @@
 package org.a3.actions;
 
 import org.a3.beans.IssueReportBean;
+import org.a3.beans.UserBean;
 import org.a3.beans.UserType;
 import org.a3.queries.IssueReportsQuery;
 import org.a3.services.SessionManager;
@@ -19,10 +20,10 @@ public class UserHomeAction extends BaseSessionAwareAction{
     public String doExecute() {
         SessionManager sm = SessionManager.get();
         if (sm.isLoggedIn(userSessionObject)){
-            UserType uType = SessionManager.get().getUserType(userSessionObject);
-            userType = uType.toString();
+            UserBean uBean = SessionManager.get().getUserBean(userSessionObject);
+            userType = uBean.getStaffRoleOrPosition().toString();
 
-            switch (uType){
+            switch (uBean.getStaffRoleOrPosition()){
                 case Staff:
                     homepageHeading = "My Assigned Issues";
                     showStatistics = true;

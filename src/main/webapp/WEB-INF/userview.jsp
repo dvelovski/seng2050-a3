@@ -19,12 +19,12 @@
                 <div class="user_menu_outer">
                     <div class="user_menu_column left">
                         <div class="user_icon_large_outer">
-                            <div class="user_icon_large_inner" id="userIcon">AD</div>
+                            <div class="user_icon_large_inner" id="userIcon"></div>
                         </div>
                     </div>
                     <div class="user_menu_column right">
                         <s:if test="action == 'editor'">
-                            <form class="column article bar" method="post" name="userUpdateForm" onsubmit="return validateUserUpdate(this)">
+                            <s:form action="userupdate" class="column article bar" method="post" name="userUpdateForm" onsubmit="return validateUserUpdate(this)">
                                 <div class="boldtext">
                                     User details
                                 </div>
@@ -35,7 +35,9 @@
                                     <div class="input_container_inner shorter_elements">
                                         <s:textfield name="uFirstName" class="tb_general" value="%{userBean.userFirstName}" />
                                     </div>
-                                    <div class="input_container_error">Error</div>
+                                    <div class="input_container_error">
+                                        <s:property value="fieldErrors.get('uFirstName').get(0)" />
+                                    </div>
                                 </div>
                                 <div class="input_container_outer">
                                     <div>
@@ -45,7 +47,11 @@
                                         <s:textfield name="uLastName" class="tb_general" value="%{userBean.userLastName}" />
                                         <label for="uLastName"></label>
                                     </div>
-                                    <div class="input_container_error">Error</div>
+                                    <div class="input_container_error">
+                                        <div class="input_container_error">
+                                            <s:property value="fieldErrors.get('uLastName').get(0)" />
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="input_container_outer">
                                     <div>
@@ -55,7 +61,11 @@
                                         <s:textfield name="uEmail" class="tb_general" value="%{userBean.userEmail}" />
                                         <label for="uEmail"></label>
                                     </div>
-                                    <div class="input_container_error">Error</div>
+                                    <div class="input_container_error">
+                                        <div class="input_container_error">
+                                            <s:property value="fieldErrors.get('uEmail').get(0)" />
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="input_container_outer">
                                     <div>
@@ -65,7 +75,11 @@
                                         <s:textfield name="uPhone" class="tb_general" value="%{userBean.userPhoneNumber}" type="number"/>
                                         <label for="uPhone"></label>
                                     </div>
-                                    <div class="input_container_error">Error</div>
+                                    <div class="input_container_error">
+                                        <div class="input_container_error">
+                                            <s:property value="fieldErrors.get('uPhone').get(0)" />
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="input_container_outer">
                                     <div class="input_container_inner">
@@ -81,8 +95,8 @@
                                         <input type="button" value="Cancel" class="no_right_border" onclick="window.location.href='<s:property value="cancel_link" />'">
                                     </div>
                                 </div>
-                                <input type="hidden" name="action" value="update">
-                            </form>
+                                <input type="hidden" name="userID" value="<s:property value="userID" />">
+                            </s:form>
                             <script>
                                 let uIcon = document.getElementById("userIcon");
                                 let uForm = document.forms["userUpdateForm"];
@@ -97,7 +111,7 @@
                                 })
 
                                 function updateUserIcon(){
-                                    uIcon.innerHTML = tbFirstName.value.charAt(0) + tbLastName.value.charAt(0);
+                                    uIcon.innerHTML = tbFirstName.value.charAt(0).toUpperCase() + tbLastName.value.charAt(0).toUpperCase();
                                 }
                             </script>
                         </s:if>
@@ -136,7 +150,7 @@
                                 let uIcon = document.getElementById("userIcon");
 
                                 function updateUserIcon(){
-                                    uIcon.innerHTML = uFirstName.charAt(0) + uLastName.charAt(0);
+                                    uIcon.innerHTML = uFirstName.charAt(0).toUpperCase() + uLastName.charAt(0).toUpperCase();
                                 }
                             </script>
                         </s:else>

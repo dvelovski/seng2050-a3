@@ -1,8 +1,12 @@
 package org.a3.actions;
 
 import org.a3.beans.UserBean;
+import org.a3.beans.UserType;
+import org.a3.queries.UserQuery;
 import org.a3.services.SessionManager;
 import org.a3.services.constants.ResponseCodes;
+
+import java.sql.SQLException;
 
 public class ProfileAction extends BaseSessionAwareAction{
     private int userID;
@@ -18,23 +22,33 @@ public class ProfileAction extends BaseSessionAwareAction{
     @Override
     public String doExecute() {
         SessionManager sm = SessionManager.get();
-        userBean = new UserBean();
-
-        userBean.setUserEmail("test@abc.com");
-        userBean.setUserFirstName("T");
-        userBean.setUserLastName("S");
-        userBean.setUserPhoneNumber("123456");
 
         if (sm.isLoggedIn(userSessionObject)) {
-            if (action.isEmpty()){
-                /* TODO if user is not staff, is this their own profile? If not, forbidden. */
-                pageTitle = "User details - " + userBean.getUserFirstName() + " " + userBean.getUserLastName();
-                return SUCCESS;
-            }else if (action.equals("editor")){
-                pageTitle = "Editing user details";
-                return SUCCESS;
-            }else if (action.equals("update")){
+            /* TODO if user is not staff, is this their own profile? If not, forbidden. */
+            UserBean currentUser = sm.getUserBean(userSessionObject);
+            UserQuery userQuery = new UserQuery();
 
+            if (currentUser.getUserIdentification() == userID || currentUser.getStaffRoleOrPosition() == UserType.Staff){
+                try {
+                    userBean = userQuery.userDetailsQuery(userID);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return ERROR;
+                }
+
+                if (userBean != null){
+                    if (action.isEmpty()){
+                        pageTitle = "User details - " + userBean.getUserFirstName() + " " + userBean.getUserLastName();
+                        return SUCCESS;
+                    }else if (action.equals("editor")){
+                        pageTitle = "Editing user details";
+                        return SUCCESS;
+                    }
+                }else{
+                    return ResponseCodes.NOTFOUND;
+                }
+            }else{
+                return ResponseCodes.FORBIDDEN;
             }
         }
         return ResponseCodes.UNAUTHORIZED;

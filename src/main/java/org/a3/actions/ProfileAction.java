@@ -28,7 +28,7 @@ public class ProfileAction extends BaseSessionAwareAction{
             UserBean currentUser = sm.getUserBean(userSessionObject);
             UserQuery userQuery = new UserQuery();
 
-            if (currentUser.getUserIdentification() == userID || currentUser.getStaffRoleOrPosition() == UserType.Staff){
+            if (currentUser.getUserIdentification() == userID || currentUser.getUserType() == UserType.Staff){
                 try {
                     userBean = userQuery.userDetailsQuery(userID);
                 } catch (SQLException e) {

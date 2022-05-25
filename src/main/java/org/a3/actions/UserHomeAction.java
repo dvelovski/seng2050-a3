@@ -1,32 +1,39 @@
 package org.a3.actions;
 
 import org.a3.beans.IssueReportBean;
+import org.a3.beans.StatisticsCategoryBean;
 import org.a3.beans.UserBean;
-import org.a3.beans.UserType;
-import org.a3.queries.IssueReportsQuery;
+import org.a3.queries.StatisticsQuery;
 import org.a3.services.SessionManager;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 public class UserHomeAction extends BaseSessionAwareAction{
     private String userType;
     private String homepageHeading;
     private boolean showStatistics;
+    private String statisticsError; //error message to show if we can't load statistics
 
     private List<IssueReportBean> issueReports;
+    private List<StatisticsCategoryBean> issueCategories;
 
     @Override
     public String doExecute() {
         SessionManager sm = SessionManager.get();
         if (sm.isLoggedIn(userSessionObject)){
             UserBean uBean = SessionManager.get().getUserBean(userSessionObject);
-            userType = uBean.getStaffRoleOrPosition().toString();
+            userType = uBean.getUserType().toString();
 
-            switch (uBean.getStaffRoleOrPosition()){
+            switch (uBean.getUserType()){
                 case Staff:
                     homepageHeading = "My Assigned Issues";
                     showStatistics = true;
+                    try {
+                        issueCategories = new StatisticsQuery().getCategorizedStatistics();
+                    } catch (SQLException e) {
+                        statisticsError = e.getMessage();
+                    }
                     //issueReports = IssueReportsQuery.getAllIssueReports();
                     break;
                 default:
@@ -53,5 +60,9 @@ public class UserHomeAction extends BaseSessionAwareAction{
 
     public List<IssueReportBean> getIssueReports() {
         return issueReports;
+    }
+
+    public List<StatisticsCategoryBean> getIssueCategories() {
+        return issueCategories;
     }
 }

@@ -46,7 +46,7 @@ public class UserBean implements Serializable {
         this.userIdentification = newUserIdentification;
     }
 
-    public void setStaffRoleOrPosition (UserType newUserType) {
+    public void setUserType(UserType newUserType) {
         this.userType = newUserType;
     }
 
@@ -74,7 +74,7 @@ public class UserBean implements Serializable {
         return userIdentification;
     }
 
-    public UserType getStaffRoleOrPosition () {
+    public UserType getUserType() {
         return userType;
     }
 }

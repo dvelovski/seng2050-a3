@@ -31,7 +31,7 @@
                         <div class="input_container_inner shorter_elements">
                             <input type="text" class="tb_general" placeholder="Title" name="newIssueTitle" id="newIssueTitle">
                         </div>
-                        <div class="input_container_error">Error</div>
+                        <div class="input_container_error"><s:property value="fieldErrors.get('newIssueTitle').get(0)" /></div>
                     </div>
                     <div class="input_container_outer">
                         <div class="input_container_desc">
@@ -72,7 +72,7 @@
                                 </optgroup>
                             </select>
                         </div>
-                        <div class="input_container_error">Error</div>
+                        <div class="input_container_error"><s:property value="fieldErrors.get('newIssueCategory').get(0)" /></div>
                     </div>
                     <div class="input_container_outer">
                         <div class="input_container_desc">
@@ -88,7 +88,7 @@
                         <div class="input_container_inner">
                             <textarea class="eight_lines tb_general" placeholder="Description of your issue" name="newIssueDesc" id="newIssueDesc" maxlength="4096"></textarea>
                         </div>
-                        <div class="input_container_error">Error</div>
+                        <div class="input_container_error"><s:property value="fieldErrors.get('newIssueDesc').get(0)" /></div>
                     </div>
                     <div class="input_container_outer">
                         <div class="input_container_desc">
@@ -104,9 +104,8 @@
                         <div class="input_container_inner">
                             <input type="file" name="issueFiles" id="newIssueFiles" multiple>
                         </div>
-                        <div class="inner_attachmentbar">
-
-                        </div>
+                        <div class="input_container_error"><s:property value="fieldErrors.get('issueFiles').get(0)" /></div>
+                        <div class="inner_attachmentbar"></div>
                     </div>
                     <div class="input_container_outer">
                         <div class="input_container_inner">

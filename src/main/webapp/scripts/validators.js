@@ -62,7 +62,7 @@ function validateIssueReport(frm){
         result = false;
     }
     console.log(cbCategory.value);
-    if (cbCategory.selectedIndex == 0){
+    if (cbCategory.selectedIndex === 0){
         fieldError(cbCategory, "Please select a category for the issue");
         result = false;
     }
@@ -106,13 +106,12 @@ function validateUserUpdate(frm){
         result = false;
     }
     if (tbPhone.value.length === 0){
-        fieldError(tbPhone, "Email is formatted incorrectly");
+        fieldError(tbPhone, "Phone number may not be blank");
         result = false;
     }
-
-
     return result;
 }
+
 function validateEmail(value){
     let emailRegex = /\S+@\S+\.\S+/
     return emailRegex.test(value);

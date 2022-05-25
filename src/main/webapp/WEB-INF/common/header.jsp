@@ -2,6 +2,7 @@
 <s:url action="userview" var="user_link">
     <s:param name="userID" value="#session.userBean.userIdentification" />
 </s:url>
+<s:url action="usercreate" var="management_link" />
 <s:url action="index" var="index_link" />
 <script src="scripts/validators.js"></script>
 <header>
@@ -24,9 +25,11 @@
                 <s:a href="%{#user_link}" class="header_item user_menu hoverable clickable unselectable">
                     User
                 </s:a>
-                <s:a href="%{#user_link}" class="header_item user_menu hoverable clickable unselectable">
-                    Management
-                </s:a>
+                <s:if test="#session.userBean.userType.toString == 'Staff'">
+                    <s:a href="%{#management_link}" class="header_item user_menu hoverable clickable unselectable">
+                        Management
+                    </s:a>
+                </s:if>
                 <s:a href="logout" class="header_item user_logout hoverable clickable unselectable">
                     Logout
                 </s:a>

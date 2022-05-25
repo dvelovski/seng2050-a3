@@ -27,7 +27,7 @@ public class ProfileUpdateAction extends BaseSessionAwareAction{
 
             //TODO validate fields
 
-            if (currentUser.getUserIdentification() == userID || currentUser.getStaffRoleOrPosition() == UserType.Staff){
+            if (currentUser.getUserIdentification() == userID || currentUser.getUserType() == UserType.Staff){
                 String returnCode = ERROR;
                 try {
                     if (currentUser.getUserIdentification() == userID){

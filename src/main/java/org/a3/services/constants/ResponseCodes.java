@@ -4,4 +4,6 @@ public class ResponseCodes {
     public static final String NOTFOUND = "notfound";
     public static final String FORBIDDEN = "forbidden";
     public static final String UNAUTHORIZED = "unauthorized";
+
+    public static final String CREATED = "created";
 }

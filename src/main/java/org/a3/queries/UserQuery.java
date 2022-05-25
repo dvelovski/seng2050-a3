@@ -30,7 +30,7 @@ public class UserQuery {
             result.setUserLastName(loginResult.getString(3));
 
             int role = loginResult.getInt(4);
-            result.setStaffRoleOrPosition(UserType.values()[role - 1]);
+            result.setUserType(UserType.values()[role - 1]);
         }
 
         statement.close();
@@ -79,6 +79,9 @@ public class UserQuery {
         statement.setInt(5, userID);
 
         statement.executeUpdate();
+    }
+    public void createUser(String uFirstName, String uLastName, String uEmail, String uPhone) throws SQLException{
+        //STUB!
     }
 }
 

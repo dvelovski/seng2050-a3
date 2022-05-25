@@ -105,144 +105,28 @@
                             <div class="table_row_inner header">
                                 <span></span>
                                 <span>Category</span>
-                                <span>Unsolved in last 7 days</span>
                                 <span>Total unsolved</span>
+                                <span>Resolved in last 7 days</span>
                             </div>
                         </div>
-                        <div class="table_content_row">
+                        <s:iterator value="issueCategories">
                             <div class="table_row_inner">
                                 <span class="subcontent_expander">&#x25BC;</span>
-                                <span>Network</span>
-                                <span>1</span>
-                                <span>15</span>
+                                <span><s:property value="categoryName" /></span>
+                                <span><s:property value="totalUnresolved" /></span>
+                                <span><s:property value="resolvedLastSevenDays" /></span>
                             </div>
                             <div class="table_row_subcontent">
-                                <div class="table_row_inner">
-                                    <span></span>
-                                    <span>Can't connect</span>
-                                    <span>1</span>
-                                    <span>3</span>
-                                </div>
-                                <div class="table_row_inner">
-                                    <span></span>
-                                    <span>Speed</span>
-                                    <span>1</span>
-                                    <span>3</span>
-                                </div>
-                                <div class="table_row_inner">
-                                    <span></span>
-                                    <span>Constant dropouts</span>
-                                    <span>1</span>
-                                    <span>3</span>
-                                </div>
+                                <s:iterator value="subCategoryBeans">
+                                    <div class="table_row_inner">
+                                        <span></span>
+                                        <span><s:property value="categoryName" /></span>
+                                        <span><s:property value="totalUnresolved" /></span>
+                                        <span><s:property value="resolvedLastSevenDays" /></span>
+                                    </div>
+                                </s:iterator>
                             </div>
-                        </div>
-                        <div class="table_content_row">
-                            <div class="table_row_inner">
-                                <span class="subcontent_expander">&#x25BC;</span>
-                                <span>Software</span>
-                                <span>1</span>
-                                <span>15</span>
-                            </div>
-                            <div class="table_row_subcontent">
-                                <div class="table_row_inner">
-                                    <span></span>
-                                    <span>Slow to load</span>
-                                    <span>1</span>
-                                    <span>3</span>
-                                </div>
-                                <div class="table_row_inner">
-                                    <span></span>
-                                    <span>Won't load at all</span>
-                                    <span>1</span>
-                                    <span>3</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table_content_row">
-                            <div class="table_row_inner">
-                                <span class="subcontent_expander">&#x25BC;</span>
-                                <span>Hardware</span>
-                                <span>1</span>
-                                <span>15</span>
-                            </div>
-                            <div class="table_row_subcontent">
-                                <div class="table_row_inner">
-                                    <span></span>
-                                    <span>Computer won't turn on</span>
-                                    <span>1</span>
-                                    <span>3</span>
-                                </div>
-                                <div class="table_row_inner">
-                                    <span></span>
-                                    <span>Computer "blue screens"</span>
-                                    <span>1</span>
-                                    <span>3</span>
-                                </div>
-                                <div class="table_row_inner">
-                                    <span></span>
-                                    <span>Disk drive</span>
-                                    <span>1</span>
-                                    <span>3</span>
-                                </div>
-                                <div class="table_row_inner">
-                                    <span></span>
-                                    <span>Peripherals</span>
-                                    <span>1</span>
-                                    <span>3</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table_content_row">
-                            <div class="table_row_inner">
-                                <span class="subcontent_expander">&#x25BC;</span>
-                                <span>Email</span>
-                                <span>1</span>
-                                <span>15</span>
-                            </div>
-                            <div class="table_row_subcontent">
-                                <div class="table_row_inner">
-                                    <span></span>
-                                    <span>Can't send</span>
-                                    <span>1</span>
-                                    <span>3</span>
-                                </div>
-                                <div class="table_row_inner">
-                                    <span></span>
-                                    <span>Can't receive</span>
-                                    <span>1</span>
-                                    <span>3</span>
-                                </div>
-                                <div class="table_row_inner">
-                                    <span></span>
-                                    <span>Spam / Phishing</span>
-                                    <span>1</span>
-                                    <span>3</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table_content_row">
-                            <div class="table_row_inner">
-                                <span class="subcontent_expander">&#x25BC;</span>
-                                <span>Account</span>
-                                <span>1</span>
-                                <span>15</span>
-                            </div>
-                            <div class="table_row_subcontent">
-                                <div class="table_row_inner">
-                                    <span></span>
-                                    <span>Password reset</span>
-                                    <span>1</span>
-                                    <span>3</span>
-                                </div>
-                                <div class="table_row_inner">
-                                    <span></span>
-                                    <span>Wrong details</span>
-                                    <span>1</span>
-                                    <span>3</span>
-                                </div>
-                            </div>
-                        </div>
+                        </s:iterator>
                     </div>
                 </div>
             </s:if>

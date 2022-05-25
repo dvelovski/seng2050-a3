@@ -80,11 +80,22 @@
                 <param name="uPhone">${uPhone}</param>
             </result>
         </action>
+        <action name="usercreate" class="org.a3.actions.ProfileCreateAction" method="execute">
+            <result name="created">/WEB-INF/creationsuccess.jsp</result>
+            <result name="error">/WEB-INF/createuser.jsp</result>
+            <result name="forbidden" type="chain">403</result>
+            <result name="unauthorized" type="chain">401</result>
+            <result name="success">/WEB-INF/createuser.jsp</result>
+        </action>
 
         <action name="knowledgebaseindex">
 
         </action>
-
+        <action name="knowledgebase" class="org.a3.actions.KnowledgeBaseViewAction" method="execute">
+            <result name="success">/WEB-INF/kbview.jsp</result>
+            <result name="forbidden" type="chain">403</result>
+            <result name="unauthorized" type="chain">401</result>
+        </action>
 
         <action name="login" class="org.a3.actions.LoginAction" method="execute">
             <result name="success" type="redirectAction">home</result>

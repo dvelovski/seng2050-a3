@@ -9,11 +9,6 @@
     <constant name="struts.ui.theme" value="simple" />
 
     <package name="default" extends="struts-default">
-
-        <interceptors>
-            <interceptor name="loginvalidator" class="org.a3.interceptors.LoginVerificationInterceptor"/>
-        </interceptors>
-
         <action name="index" class="org.a3.actions.IndexAction" method="execute">
             <result name="logged_in" type="chain">home</result>
             <result name="no_login">/WEB-INF/login.jsp</result>
@@ -102,7 +97,7 @@
             <result name="error">/WEB-INF/createuser.jsp</result>
             <result name="forbidden" type="chain">403</result>
             <result name="unauthorized" type="chain">401</result>
-            <result name="success">/WEB-INF/createuser.jsp</result>
+            <result name="success">/WEB-INF/createuser.jsp</result> <!-- keep this, it's needed to load the page initially -->
         </action>
 
         <action name="knowledgebaseindex">

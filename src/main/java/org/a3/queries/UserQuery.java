@@ -96,7 +96,6 @@ public class UserQuery {
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
 
-            boolean firstRun = true;
             do{
                 nameQueryStatement.setString(1, testUserName);
                 nameQueryStatement.executeQuery();
@@ -130,7 +129,7 @@ public class UserQuery {
 
             insertStatement.execute();
 
-            return new String[]{testUserName, finalPassword};
+            return new String[]{finalUserName, finalPassword};
         }
     }
 }

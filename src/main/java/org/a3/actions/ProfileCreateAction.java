@@ -33,16 +33,32 @@ public class ProfileCreateAction extends BaseSessionAwareAction{
                     return SUCCESS;
                 }else{
                     //TODO validation
-                    try {
-                        String[] details = new UserQuery().createUser(uFirstName, uLastName, uEmail, uPhone, Integer.parseInt(uAcctType));
-                        newUserName = details[0];
-                        newUserPass = details[1];
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        return ERROR;
+                    boolean validated = true;
+                    int parsedAcctType = 1;
+
+                    if (uAcctType.isEmpty()){
+                        addFieldError("uAcctType", "A selection must be made for user type.");
+                        validated = false;
+                    }else{
+                        parsedAcctType = Integer.parseInt(uAcctType);
+                        if (parsedAcctType != 1 && parsedAcctType != 2){
+                            addFieldError("uAcctType", "Invalid user type specified.");
+                            validated = false;
+                        }
+                    }
+                    if (validated){
+                        try {
+                            String[] details = new UserQuery().createUser(uFirstName, uLastName, uEmail, uPhone, parsedAcctType);
+                            newUserName = details[0];
+                            newUserPass = details[1];
+
+                            return ResponseCodes.CREATED;
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
                     }
 
-                    return ResponseCodes.CREATED;
+                    return ERROR;
                 }
             }else{
                 return ResponseCodes.FORBIDDEN;

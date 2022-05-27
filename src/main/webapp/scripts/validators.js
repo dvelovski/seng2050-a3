@@ -61,7 +61,6 @@ function validateIssueReport(frm){
         fieldError(tbTitle, "Issue title may not be blank");
         result = false;
     }
-    console.log(cbCategory.value);
     if (cbCategory.selectedIndex === 0){
         fieldError(cbCategory, "Please select a category for the issue");
         result = false;
@@ -90,6 +89,47 @@ function validateUserUpdate(frm){
     trimValue(tbLastName);
     trimValue(tbEmail);
     
+    if (tbFirstName.value.length === 0){
+        fieldError(tbFirstName, "First name may not be blank");
+        result = false;
+    }
+    if (tbLastName.value.length === 0){
+        fieldError(tbLastName, "Last name may not be blank");
+        result = false;
+    }
+    if (tbEmail.value.length === 0){
+        fieldError(tbEmail, "Email address must be specified");
+        result = false;
+    }else if (!validateEmail(tbEmail.value)){
+        fieldError(tbEmail, "Email is formatted incorrectly");
+        result = false;
+    }
+    if (tbPhone.value.length === 0){
+        fieldError(tbPhone, "Phone number may not be blank");
+        result = false;
+    }
+    return result;
+}
+
+function validateUserCreation(frm){
+    resetState();
+
+    let result = true;
+    let cbUserType = frm.elements["uAcctType"]
+    let tbFirstName = frm.elements["uFirstName"];
+    let tbLastName = frm.elements["uLastName"];
+    let tbEmail = frm.elements["uEmail"];
+    let tbPhone = frm.elements["uPhone"];
+
+    trimValue(tbFirstName);
+    trimValue(tbLastName);
+    trimValue(tbEmail);
+
+    if (cbUserType.selectedIndex === 0){
+        fieldError(cbUserType, "Please select a user type for this new user");
+        result = false;
+    }
+
     if (tbFirstName.value.length === 0){
         fieldError(tbFirstName, "First name may not be blank");
         result = false;

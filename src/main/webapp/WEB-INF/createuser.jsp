@@ -17,7 +17,7 @@
                     <h2>Create New User</h2>
                 </div>
                 <s:form action="usercreate" class="column article bar" method="post" name="userUpdateForm"
-                        onsubmit="return validateUserUpdate(this)"> <!-- TODO validateUserCreation as we now have the user type field -->
+                        onsubmit="return validateUserCreation(this)">
                     <div class="input_container_outer">
                         <div class="input_container_desc">
                             <label for="uAcctType">New user type</label>

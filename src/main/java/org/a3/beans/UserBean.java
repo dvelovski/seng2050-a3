@@ -2,7 +2,7 @@ package org.a3.beans;
 
 import java.io.Serializable;
 public class UserBean implements Serializable {
-    
+    private String userName;
     private String userEmail;
     private String userPassword;
     private String userLastName;
@@ -12,7 +12,7 @@ public class UserBean implements Serializable {
     private UserType userType;
 
     public UserBean() {
-
+        this.userName = null;
         this.userEmail = null;
         this.userPassword = null;
         this.userLastName = null;
@@ -20,6 +20,14 @@ public class UserBean implements Serializable {
         this.userPhoneNumber = null;
         this.userIdentification = 0;
         this.userType = null;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public void setUserEmail (String newUserEmail) {

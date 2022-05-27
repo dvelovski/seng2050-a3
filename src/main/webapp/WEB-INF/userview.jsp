@@ -118,6 +118,10 @@
                         <s:else>
                             <div class="column article bar">
                                 <div class="input_container_outer">
+                                    <div class="boldtext">System username</div>
+                                    <div id="userUName"><s:property value="userBean.userName"/></div>
+                                </div>
+                                <div class="input_container_outer">
                                     <div class="boldtext">First name</div>
                                     <div id="userFirstName"><s:property value="userBean.userFirstName"/></div>
                                 </div>

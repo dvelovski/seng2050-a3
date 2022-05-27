@@ -42,7 +42,7 @@ public class UserQuery {
     }
     public UserBean userDetailsQuery(int userID) throws SQLException {
         try (Connection conn = JDBCConfigBean.get().createConnection()) {
-            String userQuery = "SELECT firstName,lastName,email,phoneNumber FROM SENG2050_A3.dbo.Users WHERE id=?";
+            String userQuery = "SELECT userName,firstName,lastName,email,phoneNumber FROM SENG2050_A3.dbo.Users WHERE id=?";
             PreparedStatement statement = conn.prepareStatement(userQuery);
             statement.setInt(1, userID);
 
@@ -50,10 +50,11 @@ public class UserQuery {
             UserBean resultBean = null;
             if (queryResult.next()){
                 resultBean = new UserBean();
-                resultBean.setUserFirstName(queryResult.getString(1));
-                resultBean.setUserLastName(queryResult.getString(2));
-                resultBean.setUserEmail(queryResult.getString(3));
-                resultBean.setUserPhoneNumber(queryResult.getString(4));
+                resultBean.setUserName(queryResult.getString(1));
+                resultBean.setUserFirstName(queryResult.getString(2));
+                resultBean.setUserLastName(queryResult.getString(3));
+                resultBean.setUserEmail(queryResult.getString(4));
+                resultBean.setUserPhoneNumber(queryResult.getString(5));
             }
 
             return resultBean;

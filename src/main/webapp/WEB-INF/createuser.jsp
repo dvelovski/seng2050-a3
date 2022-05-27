@@ -17,7 +17,20 @@
                     <h2>Create New User</h2>
                 </div>
                 <s:form action="usercreate" class="column article bar" method="post" name="userUpdateForm"
-                        onsubmit="return validateUserUpdate(this)">
+                        onsubmit="return validateUserUpdate(this)"> <!-- TODO validateUserCreation as we now have the user type field -->
+                    <div class="input_container_outer">
+                        <div class="input_container_desc">
+                            <label for="uAcctType">New user type</label>
+                        </div>
+                        <div class="input_container_inner shorter_elements">
+                            <select class="tb_general" name="uAcctType" id="uAcctType">
+                                <option value="0" selected disabled hidden>Make a selection</option>
+                                    <option value="1">Standard user</option>
+                                    <option value="2">Staff member</option>
+                            </select>
+                        </div>
+                        <div class="input_container_error"><s:property value="fieldErrors.get('uAcctType').get(0)" /></div>
+                    </div>
                     <div class="input_container_outer">
                         <div>
                             <label for="uFirstName">First name</label>

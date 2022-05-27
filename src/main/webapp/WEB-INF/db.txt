@@ -1,0 +1,3 @@
+jdbc:sqlserver://seng2050-a3.database.windows.net:1433;databaseName=SENG2050_A3
+seng2050_admin
+hf%yY6u*i7(Py@

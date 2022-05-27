@@ -136,11 +136,13 @@
                             </div>
                         </div>
 
-                        <!-- TODO for staff only -->
-                        <div class="input_container_outer">
-                            <input type="checkbox" id="cResolvesIssue" name="cResolvesIssue" />
-                            <label for="cResolvesIssue">Mark as Resolved</label>
-                        </div>
+                        <s:if test="#session.userBean.userType.toString == 'Staff'">
+                            <div class="input_container_outer">
+                                <input type="checkbox" id="cResolvesIssue" name="cResolvesIssue" />
+                                <label for="cResolvesIssue">Mark as Resolved</label>
+                            </div>
+                        </s:if>
+
                         <div class="input_container_outer">
                             <div class="input_container_inner">
                                 <input type="submit" value="Add comment" class="no_right_border">

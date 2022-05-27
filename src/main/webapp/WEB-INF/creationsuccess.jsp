@@ -27,10 +27,10 @@
                 <div class="article bar contents">
                     <span class="boldtext">New user details</span>
                     <div>
-                        TODO: new user name goes here!
+                        <span class="boldtext">Username:</span> <s:property value="newUserName" />
                     </div>
                     <div>
-                        TODO: new user pwd goes here!
+                        <span class="boldtext">Password:</span> <s:property value="newUserPass" />
                     </div>
                 </div>
             </div>

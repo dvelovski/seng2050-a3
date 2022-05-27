@@ -8,7 +8,6 @@ import java.util.Map;
 public class SessionManager {
     public static final String LOGGED_IN_KEY = "loggedIn";
     public static final String USER_BEAN_KEY = "userBean";
-    public static final String USER_TYPE_KEY = "userType";
     private static SessionManager manager;
     public static SessionManager get(){
         if (manager == null) {
@@ -26,12 +25,6 @@ public class SessionManager {
     }
     public void setLoggedIn(Map<String, Object> sessionMap, boolean loginStatus){
         sessionMap.put(LOGGED_IN_KEY, (loginStatus ? 1 : 0));
-    }
-    public void setUserType(Map<String, Object> sessionMap, UserType uType){
-        sessionMap.put(USER_TYPE_KEY, uType);
-    }
-    public UserType getUserType(Map<String, Object> sessionMap){
-        return (UserType) sessionMap.get(USER_TYPE_KEY);
     }
     public boolean isLoggedIn(Map<String, Object> sessionMap){
         return ((int) sessionMap.getOrDefault(LOGGED_IN_KEY, 0)) == 1;

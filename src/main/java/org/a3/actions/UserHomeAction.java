@@ -17,6 +17,7 @@ public class UserHomeAction extends BaseSessionAwareAction{
 
     private List<IssueReportBean> issueReports;
     private List<StatisticsCategoryBean> issueCategories;
+    private double stressRate;
 
     @Override
     public String doExecute() {
@@ -30,7 +31,10 @@ public class UserHomeAction extends BaseSessionAwareAction{
                     homepageHeading = "My Assigned Issues";
                     showStatistics = true;
                     try {
-                        issueCategories = new StatisticsQuery().getCategorizedStatistics();
+                        StatisticsQuery statQuery = new StatisticsQuery();
+                        issueCategories = statQuery.getCategorizedStatistics();
+                        stressRate = statQuery.getStressRate();
+
                     } catch (SQLException e) {
                         statisticsError = e.getMessage();
                     }
@@ -64,5 +68,9 @@ public class UserHomeAction extends BaseSessionAwareAction{
 
     public List<StatisticsCategoryBean> getIssueCategories() {
         return issueCategories;
+    }
+
+    public double getStressRate() {
+        return stressRate;
     }
 }

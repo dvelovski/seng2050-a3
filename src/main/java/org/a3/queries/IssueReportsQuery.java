@@ -11,9 +11,8 @@ package org.a3.queries; /**
 
 import java.util.*;
 import java.sql.*;
-import javax.sql.*;
 
-import org.a3.beans.ConfigBean;
+import org.a3.beans.JDBCConfigBean;
 import org.a3.beans.IssueReportBean;
 
 public class IssueReportsQuery
@@ -23,7 +22,7 @@ public class IssueReportsQuery
     {
         String query = "SELECT * FROM IssueReports";
         List<IssueReportBean> reports = new LinkedList<>();
-        try (Connection connection = ConfigBean.get().getConnection();
+        try (Connection connection = JDBCConfigBean.get().createConnection();
              Statement statement = connection.createStatement();
              ResultSet result = statement.executeQuery(query);)
         {
@@ -47,5 +46,17 @@ public class IssueReportsQuery
             System.err.println(e.getStackTrace());
         }
         return reports;
+    }
+
+    public List<IssueReportBean> getIssueReports(int forUser, int offset, int count){
+        //TODO stub
+        return null;
+    }
+    public IssueReportBean getIssueReport(){
+        //TODO stub
+        return null;
+    }
+    public int createIssueReport(String iTitle, String iDesc, int iCategory /* file references */){
+        return -1;
     }
 }

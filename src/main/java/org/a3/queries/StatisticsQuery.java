@@ -1,4 +1,5 @@
-package org.a3.queries; /**
+package org.a3.queries;
+/*
  * @author (Dane Cowburn)
  * @version (1.0)
  * @date (2022-05-20)
@@ -12,14 +13,14 @@ package org.a3.queries; /**
 import java.util.*;
 import java.sql.*;
 
-import org.a3.beans.JDBCConfigBean;
+import org.a3.services.JDBCUtil;
 import org.a3.beans.StatisticsCategoryBean;
 
 public class StatisticsQuery
 {
     /** author dvelovski **/
     public List<StatisticsCategoryBean> getCategorizedStatistics() throws SQLException {
-        try (Connection conn = JDBCConfigBean.get().createConnection()){
+        try (Connection conn = JDBCUtil.get().createConnection()){
             HashMap<String, StatisticsCategoryBean> results = new LinkedHashMap<>(); //preserve order
 
             String statsQuery = "SELECT\n" +
@@ -78,7 +79,7 @@ public class StatisticsQuery
     }
 
     public double getStressRate() throws SQLException{
-        try (Connection conn = JDBCConfigBean.get().createConnection()){
+        try (Connection conn = JDBCUtil.get().createConnection()){
             String stressQuery = "SELECT (SELECT COUNT(*) FROM IssueReports WHERE acceptedSolution = 0) AS \"Unresolved Issues\", \n" +
                     "(SELECT COUNT(*) FROM Users WHERE userRole = 2) AS \"Staff Count\"";
 

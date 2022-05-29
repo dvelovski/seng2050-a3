@@ -318,7 +318,6 @@ form.column{
     margin-top: 0.25em;
     color: red;
     font-size: 14px;
-    display: none;
 }
 .login_box p{
     font-size: 13px;
@@ -440,7 +439,7 @@ form.column{
 .issue_status_text.new{
     background: #2962ff;
 }
-.issue_status_text.assigned{
+.issue_status_text.inprogress{
     background: #00796b;
 }
 .issue_status_text.resolved{
@@ -496,6 +495,9 @@ form.column{
 }
 .inline_attachment_item .attachment_details{
     padding: 0 1.5em 0 0.5em;
+    max-width: 120px;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 .divider{
     border-bottom: 1px solid #757575;

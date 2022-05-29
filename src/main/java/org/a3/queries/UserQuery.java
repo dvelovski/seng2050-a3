@@ -1,6 +1,6 @@
 package org.a3.queries;
 
-import org.a3.beans.JDBCConfigBean;
+import org.a3.services.JDBCUtil;
 import org.a3.beans.UserBean;
 import org.a3.beans.UserType;
 import org.a3.services.PasswordGenerator;
@@ -41,7 +41,7 @@ public class UserQuery {
         return result;
     }
     public UserBean userDetailsQuery(int userID) throws SQLException {
-        try (Connection conn = JDBCConfigBean.get().createConnection()) {
+        try (Connection conn = JDBCUtil.get().createConnection()) {
             String userQuery = "SELECT userName,firstName,lastName,email,phoneNumber FROM SENG2050_A3.dbo.Users WHERE id=?";
             PreparedStatement statement = conn.prepareStatement(userQuery);
             statement.setInt(1, userID);
@@ -62,7 +62,7 @@ public class UserQuery {
     }
     public void userDetailsUpdate(int userID, String nFirstName, String nLastName, String nEmail, String nPhone) throws SQLException {
         //if userDetailsUpdate works, we'll update the bean on our end
-        try (Connection conn = JDBCConfigBean.get().createConnection()) {
+        try (Connection conn = JDBCUtil.get().createConnection()) {
             String updateQuery = "UPDATE SENG2050_A3.dbo.Users SET firstName=?,lastName=?,email=?,phoneNumber=? WHERE id=?";
             PreparedStatement statement = conn.prepareStatement(updateQuery);
             statement.setString(1, nFirstName);
@@ -84,7 +84,7 @@ public class UserQuery {
 
         //System.out.println("generated username: " + newUserName + " / pass: " + finalPassword);
 
-        try (Connection conn = JDBCConfigBean.get().createConnection()){
+        try (Connection conn = JDBCUtil.get().createConnection()){
             //firstly check for username conflicts
             String testUserName = newUserName;
 

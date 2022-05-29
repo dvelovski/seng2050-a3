@@ -1,6 +1,6 @@
 package org.a3.startup;
 
-import org.a3.beans.JDBCConfigBean;
+import org.a3.services.JDBCUtil;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -15,7 +15,7 @@ public class A3Initializer implements ServletContextListener, HttpSessionListene
         /* This method is called when the servlet context is initialized(when the Web application is deployed). */
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            JDBCConfigBean.get().loadConfig(sce.getServletContext());
+            JDBCUtil.get().loadConfig(sce.getServletContext());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }

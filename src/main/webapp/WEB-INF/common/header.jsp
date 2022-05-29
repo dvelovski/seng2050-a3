@@ -5,6 +5,19 @@
 <s:url action="usercreate" var="management_link" />
 <s:url action="index" var="index_link" />
 <script src="scripts/validators.js"></script>
+<script>
+    window.addEventListener("load", function(){
+        console.log("onLoad");
+        let errorDivs = document.querySelectorAll(".input_container_error");
+        for (let i = 0; i < errorDivs.length; i++){
+            if (errorDivs[i].innerHTML.trim().length > 0){
+                fieldsWithErrors.push(errorDivs[i]);
+            }else{
+                errorDivs[i].style.display = "none";
+            }
+        }
+    }, false);
+</script>
 <header>
     <div class="header_inner">
         <div class="hgroup left">

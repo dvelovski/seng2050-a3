@@ -3,6 +3,7 @@ package org.a3.actions;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import org.a3.beans.UserBean;
 import org.a3.beans.UserType;
+import org.a3.queries.IssueReportsQuery;
 import org.a3.services.SessionManager;
 import org.a3.services.constants.ResponseCodes;
 
@@ -38,6 +39,7 @@ public class IssueSubmitAction extends BaseSessionAwareAction{
             }else{
                 /* do server-side validation */
                 boolean validation = true;
+                String innerResponseCode = ERROR;
 
                 newIssueTitle = newIssueTitle.trim();
                 newIssueDesc = newIssueDesc.trim();
@@ -56,13 +58,15 @@ public class IssueSubmitAction extends BaseSessionAwareAction{
                     validation = false;
                 }else if (newIssueDesc.length() > 4096){
                     addFieldError("newIssueDesc", "Description exceeds maximum allowed length of 4096 characters.");
+                    validation = false;
                 }
 
                 if (validation){
-                    return SUCCESS;
-                }else{
-                    return ERROR;
+                    resultingIssueID = new IssueReportsQuery().createIssueReport(newIssueTitle, newIssueDesc, catIdx, user.getUserIdentification(), issueFiles, issueFilesFileName, issueFilesContentType);
+                    innerResponseCode = SUCCESS;
                 }
+
+                return innerResponseCode;
             }
         }
         return ResponseCodes.FORBIDDEN;

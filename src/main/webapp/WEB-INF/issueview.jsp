@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Issue details</title>
+        <title>Issue details - <s:property value="issueReport.title" /></title>
         <link rel="stylesheet" href="styles/assi3.css">
     </head>
     <body>
@@ -16,16 +16,18 @@
 
             <div class="body_box body_widget">
                 <div class="form_header flex_row">
-                    <h2>Issue title</h2>
+                    <h2><s:property value="issueReport.title" /></h2>
                     <div class="group right">
-                        <span class="issue_status_text">Status</span>
+                        <span class="<s:property value="statusClass" />"><s:property value="issueReport.issueStatusString" /></span>
                     </div>
                 </div>
 
                 <div class="article bar title">
                     <div class="group left">
-                        <div class="ddd"><span>Posted by </span><span class="boldtext">User</span> on <span>xx</span></div>
-                        <div class="ddd"><span>Assigned to </span><span class="boldtext">User</span>, last update at <span>xx</span></div>
+                        <div class="ddd"><span>Posted by </span><span class="boldtext"><s:property value="issueReport.createdBy" /></span> on <span><s:property value="issueReport.reportedAt" /></span></div>
+                        <s:if test="issueReport.assignedToName.length > 0">
+                            <div class="ddd"><span>Assigned to </span><span class="boldtext"><s:property value="issueReport.assignedToName" /></span></div>
+                        </s:if>
 
                     </div>
 
@@ -33,66 +35,35 @@
                 <div class="divider"></div>
                 <div class="article bar contents">
                     <span class="boldtext">Issue description:</span>
-                    <div>
-                        First of all where in this tutorials ever written that you should use an IDE like IntelliJ? Second you didn't follow or don't understand the tutorial. Third Struts2 tutorials are not for beginners, but for experienced developers, who are familiar with web development, but lacked Struts knowledge. If you don't know how or don't want to follow the tutorial, nobody can help with it.
-                        1) Yes, you should probably use either Maven or Gradle to manage your dependencies (it makes it way easier).
-
-                        2) If you decide to use Maven, all you gotta do is put the pom.xml that the guide you are using has in the root directory of your project. Here's the pom.
-
-                        3) Typically the resources folder goes in src/main (src/main/resources).
-
-                        4) Mkyong.com is a pretty good learning resource. Good luck!
-                    </div>
+                    <div><s:property value="issueReport.issueDescription" /></div>
                 </div>
+                <div class="divider"></div>
                 <div class="article bar attachments">
-                    <span>Attachments <span class="boldtext">(5)</span>:</span>
-                    <div class="inner_attachmentbar">
-                        <div class="inline_attachment_item">
-                            <div class="attachment_icon">
-                                &#128206;
-                            </div>
-                            <div class="attachment_details">
-                                Filename<br>
-                                xxx KB
-                            </div>
+                    <s:if test="issueFiles.size > 0">
+                        <span>Attachments (<span class="boldtext"><s:property value="issueFiles.size" /></span>):</span>
+                        <div class="inner_attachmentbar">
+                        <s:iterator value="issueFiles">
+                            <s:url action="download" var="dlLink">
+                                <s:param name="requestedFileID"><s:property value="fileID"/></s:param>
+                            </s:url>
+                            <a class="inline_attachment_item" href="${dlLink}" download="<s:property value="fileName"/>">
+                                <div class="attachment_icon">
+                                    &#128206;
+                                </div>
+                                <div class="attachment_details" title="<s:property value="fileName" />">
+                                    <s:property value="fileName" /><br>
+                                    <s:property value="fileSizeString" />
+                                </div>
+                            </a>
+                        </s:iterator>
                         </div>
-                        <div class="inline_attachment_item">
-                            <div class="attachment_icon">
-                                &#128206;
-                            </div>
-                            <div class="attachment_details">
-                                Filename<br>
-                                xxx KB
-                            </div>
+                    </s:if>
+                    <s:else>
+                        <span>Attachments:</span>
+                        <div class="inner_attachmentbar">
+                            <s:property value="issueReport.createdBy" /> did not upload any files.
                         </div>
-                        <div class="inline_attachment_item">
-                            <div class="attachment_icon">
-                                &#128206;
-                            </div>
-                            <div class="attachment_details">
-                                Filename<br>
-                                xxx KB
-                            </div>
-                        </div>
-                        <div class="inline_attachment_item">
-                            <div class="attachment_icon">
-                                &#128206;
-                            </div>
-                            <div class="attachment_details">
-                                Filename<br>
-                                xxx KB
-                            </div>
-                        </div>
-                        <div class="inline_attachment_item">
-                            <div class="attachment_icon">
-                                &#128206;
-                            </div>
-                            <div class="attachment_details">
-                                Filename<br>
-                                xxx KB
-                            </div>
-                        </div>
-                    </div>
+                    </s:else>
                 </div>
                 <div class="divider"></div>
                 <div class="article bar replies">
@@ -123,33 +94,35 @@
                             </div>
                         </div>
                     </div>
-                    <div class="divider"></div>
-                    <s:form action="issuecomment" class="column">
-                        <div class="input_container_outer">
-                            <div>Add a new reply:</div>
-                            <div class="input_container_inner">
-                                <s:textarea class="four_lines tb_general" id="iNewComment" name="cCommentText" />
-                                <label for="iNewComment"></label>
-                                <div class="input_container_error">
-                                    Error!
+                    <s:if test="showComments == true">
+                        <div class="divider"></div>
+                        <s:form action="issuecomment" class="column">
+                            <div class="input_container_outer">
+                                <div>Add a new reply:</div>
+                                <div class="input_container_inner">
+                                    <s:textarea class="four_lines tb_general" id="iNewComment" name="cCommentText" />
+                                    <label for="iNewComment"></label>
+                                    <div class="input_container_error">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <s:if test="#session.userBean.userType.toString == 'Staff'">
+                            <s:if test="#session.userBean.userType.toString == 'Staff'">
+                                <div class="input_container_outer">
+                                    <input type="checkbox" id="cResolvesIssue" name="cResolvesIssue" />
+                                    <label for="cResolvesIssue">Mark as Resolved</label>
+                                </div>
+                            </s:if>
+
                             <div class="input_container_outer">
-                                <input type="checkbox" id="cResolvesIssue" name="cResolvesIssue" />
-                                <label for="cResolvesIssue">Mark as Resolved</label>
+                                <div class="input_container_inner">
+                                    <input type="submit" value="Add comment" class="no_right_border">
+                                    <div class="input_container icon unselectable right_side">&#10095;</div>
+                                </div>
                             </div>
-                        </s:if>
+                        </s:form>
+                    </s:if>
 
-                        <div class="input_container_outer">
-                            <div class="input_container_inner">
-                                <input type="submit" value="Add comment" class="no_right_border">
-                                <div class="input_container icon unselectable right_side">&#10095;</div>
-                            </div>
-                        </div>
-                    </s:form>
                 </div>
             </div>
         </div>

@@ -13,17 +13,43 @@ import java.io.Serializable;
 
 public class IssueReportBean implements Serializable
 {
+	private int id;
+	private int creatorID;
 	private String createdBy;
 	private String title;
 	private String issueDescription;
-	private boolean issueStatus;
+	private int issueStatus;
+	private String issueStatusString;
 	private String reportedAt;
 	private String resolvedAt;
 	private boolean locked;
-	private boolean acceptedSolution;
+	private int proposedSolution;
+	private int acceptedSolution;
+	private int knowledgeBaseArticleID;
 	private String category;
+	private String subCategory;
+	private int categoryID;
+
+	private String assignedToName;
+	private int assignedToID;
 
 	public IssueReportBean() {}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getCreatorID() {
+		return creatorID;
+	}
+
+	public void setCreatorID(int creatorID) {
+		this.creatorID = creatorID;
+	}
 
 	//Accessor and Mutator methods for the name of the user who created the report
 	public String getCreatedBy ()
@@ -56,13 +82,21 @@ public class IssueReportBean implements Serializable
 	}
 
 	//Accessor and Mutator methods for issue status of report
-	public boolean getIssueStatus ()
+	public int getIssueStatus ()
 	{
 		return this.issueStatus;
 	}
-	public void setIssueStatus (boolean issueStatus)
+	public void setIssueStatus (int issueStatus)
 	{
 		this.issueStatus = issueStatus;
+	}
+
+	public String getIssueStatusString() {
+		return issueStatusString;
+	}
+
+	public void setIssueStatusString(String issueStatusString) {
+		this.issueStatusString = issueStatusString;
 	}
 
 	//Accessor and Mutator methods for date and time that report was created
@@ -95,14 +129,30 @@ public class IssueReportBean implements Serializable
 		this.locked = locked;
 	}
 
+	public int getProposedSolution() {
+		return proposedSolution;
+	}
+
+	public void setProposedSolution(int proposedSolution) {
+		this.proposedSolution = proposedSolution;
+	}
+
 	//Accessor and Mutator methods for whether solution supplied to issue report is accepted by client
-	public boolean getAcceptedSolution ()
+	public int getAcceptedSolution ()
 	{
 		return this.acceptedSolution;
 	}
-	public void setAcceptedSolution (boolean acceptedSolution)
+	public void setAcceptedSolution (int acceptedSolution)
 	{
 		this.acceptedSolution = acceptedSolution;
+	}
+
+	public int getKnowledgeBaseArticleID() {
+		return knowledgeBaseArticleID;
+	}
+
+	public void setKnowledgeBaseArticleID(int knowledgeBaseArticleID) {
+		this.knowledgeBaseArticleID = knowledgeBaseArticleID;
 	}
 
 	//Accessor and Mutator methods for issue category
@@ -115,4 +165,35 @@ public class IssueReportBean implements Serializable
 		this.category = category;
 	}
 
-} 
+	public String getSubCategory() {
+		return subCategory;
+	}
+
+	public void setSubCategory(String subCategory) {
+		this.subCategory = subCategory;
+	}
+
+	public int getCategoryID() {
+		return categoryID;
+	}
+
+	public void setCategoryID(int categoryID) {
+		this.categoryID = categoryID;
+	}
+
+	public String getAssignedToName() {
+		return assignedToName;
+	}
+
+	public void setAssignedToName(String assignedToName) {
+		this.assignedToName = assignedToName;
+	}
+
+	public int getAssignedToID() {
+		return assignedToID;
+	}
+
+	public void setAssignedToID(int assignedToID) {
+		this.assignedToID = assignedToID;
+	}
+}

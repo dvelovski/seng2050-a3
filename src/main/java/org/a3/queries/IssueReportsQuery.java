@@ -9,10 +9,16 @@ package org.a3.queries; /**
  * @description: database query class for existing issue reports.
  */
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.sql.*;
 
-import org.a3.beans.JDBCConfigBean;
+import com.microsoft.sqlserver.jdbc.SQLServerStatement;
+import org.a3.beans.UploadedFileBean;
+import org.a3.services.FileDownloadData;
+import org.a3.services.JDBCUtil;
 import org.a3.beans.IssueReportBean;
 
 public class IssueReportsQuery
@@ -22,7 +28,7 @@ public class IssueReportsQuery
     {
         String query = "SELECT * FROM IssueReports";
         List<IssueReportBean> reports = new LinkedList<>();
-        try (Connection connection = JDBCConfigBean.get().createConnection();
+        try (Connection connection = JDBCUtil.get().createConnection();
              Statement statement = connection.createStatement();
              ResultSet result = statement.executeQuery(query);)
         {
@@ -32,18 +38,17 @@ public class IssueReportsQuery
                 report.setCreatedBy(result.getString(1));
                 report.setTitle(result.getString(2));
                 report.setIssueDescription(result.getString(3));
-                report.setIssueStatus(result.getBoolean(4));
+                //report.setIssueStatus(result.getBoolean(4));
                 report.setReportedAt(result.getString(5));
                 report.setResolvedAt(result.getString(6));
                 report.setLocked(result.getBoolean(7));
-                report.setAcceptedSolution(result.getBoolean(8));
+                //report.setAcceptedSolution(result.getBoolean(8));
                 report.setCategory(result.getString(9));
                 reports.add(report);
             }
         } catch (SQLException e)
         {
-            System.err.println(e.getMessage());
-            System.err.println(e.getStackTrace());
+            e.printStackTrace();
         }
         return reports;
     }
@@ -52,11 +57,167 @@ public class IssueReportsQuery
         //TODO stub
         return null;
     }
-    public IssueReportBean getIssueReport(){
+    public IssueReportBean getIssueReport(int issueID){
         //TODO stub
-        return null;
+        IssueReportBean report = null;
+        try (Connection conn = JDBCUtil.get().createConnection()) {
+            String fetchQuery = "SELECT id,\n" +
+                    "       createdBy,\n" +
+                    "       (SELECT TOP 1 CONCAT(Users.firstName, ' ', Users.lastName) FROM Users WHERE Users.id = IR.createdBy),\n" +
+                    "       title,\n" +
+                    "       issueDescription,\n" +
+                    "       issueStatus,\n" +
+                    "       (SELECT statusName FROM Status WHERE Status.id = IR.issueStatus),\n" +
+                    "       reportedAt,\n" +
+                    "       resolvedAt,\n" +
+                    "       locked,\n" +
+                    "       proposedSolution,\n" +
+                    "       acceptedSolution,\n" +
+                    "       knowledgeBaseArticleID,\n" +
+                    "       category,\n" +
+                    "       (SELECT Category.categoryName FROM Category WHERE category.id IN (\n" +
+                    "            SELECT subCategoryOf FROM SubCategory WHERE SubCategory.id = IR.category\n" +
+                    "       )),\n" +
+                    "       (SELECT SubCategory.categoryName FROM SubCategory WHERE SubCategory.id = IR.category),\n" +
+                    "       (SELECT TOP 1 CONCAT(Users.firstName, ' ', Users.lastName) FROM Users WHERE Users.id = IR.assignedTo),\n" +
+                    "       assignedTo\n" +
+                    "FROM IssueReports IR\n" +
+                    "WHERE id = ?;";
+            PreparedStatement fetchStmt = conn.prepareStatement(fetchQuery);
+            fetchStmt.setInt(1, issueID);
+
+            ResultSet result = fetchStmt.executeQuery();
+            while (result.next()){
+                report = new IssueReportBean();
+                report.setId(result.getInt(1));
+                report.setCreatorID(result.getInt(2));
+                report.setCreatedBy(result.getString(3));
+                report.setTitle(result.getString(4));
+                report.setIssueDescription(result.getString(5));
+                report.setIssueStatus(result.getInt(6));
+                report.setIssueStatusString(result.getString(7));
+                report.setReportedAt(result.getString(8));
+                report.setResolvedAt(result.getString(9));
+                report.setLocked(result.getBoolean(10));
+                report.setProposedSolution(result.getInt(11));
+                report.setAcceptedSolution(result.getInt(12));
+                report.setKnowledgeBaseArticleID(result.getInt(13));
+                report.setCategoryID(result.getInt(14));
+                report.setCategory(result.getString(15));
+                report.setSubCategory(result.getString(16));
+                report.setAssignedToName(result.getString(17));
+                report.setAssignedToID(result.getInt(18));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return report;
     }
-    public int createIssueReport(String iTitle, String iDesc, int iCategory /* file references */){
-        return -1;
+    public int createIssueReport(String iTitle, String iDesc, int iCategory, int iAuthor, List<File> files, List<String> fileNames, List<String> fileMimes){
+        int issueResultID = -1;
+
+        try (Connection conn = JDBCUtil.get().createConnection()){
+            String creationQuery = "INSERT INTO IssueReports (createdBy, title, issueDescription, category, reportedAt, issueStatus) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 1)";
+            PreparedStatement insertStmt = conn.prepareStatement(creationQuery, SQLServerStatement.RETURN_GENERATED_KEYS);
+            insertStmt.setInt(1, iAuthor);
+            insertStmt.setString(2, iTitle);
+            insertStmt.setString(3, iDesc);
+            insertStmt.setInt(4, iCategory);
+
+            insertStmt.executeUpdate();
+            ResultSet generatedKeys = insertStmt.getGeneratedKeys();
+            if (generatedKeys.next()){
+                issueResultID = (int) generatedKeys.getLong(1);
+            }
+            System.out.println("new issue ID: " + issueResultID);
+
+            insertStmt.close();
+
+            //insert the files
+            String fileUploadQuery = "INSERT INTO UploadedFiles (issueID, uploadedBy, mime, fileName, fileData, fileSize) VALUES (?, ?, ?, ?, ?, ?)";
+            PreparedStatement ulStmt = conn.prepareStatement(fileUploadQuery);
+
+            for (int f = 0, fSize = files.size(); f < fSize; f++){
+                ulStmt.setInt(1, issueResultID);
+                ulStmt.setInt(2, iAuthor);
+                ulStmt.setString(3, fileMimes.get(f));
+                ulStmt.setString(4, fileNames.get(f));
+
+                Path p = files.get(f).toPath();
+                try {
+                    long size = Files.size(p);
+                    ulStmt.setBinaryStream(5, Files.newInputStream(p));
+                    ulStmt.setLong(6, size);
+                    //separate try-catch because i don't want to halt the process if one file fails.
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println("Uploading: " + fileNames.get(f));
+                ulStmt.execute();
+            }
+
+            ulStmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return issueResultID;
     }
+
+    public FileDownloadData getFileStream(int fileID){
+        FileDownloadData result = null;
+
+        try (Connection conn = JDBCUtil.get().createConnection()){
+            String retrievalQuery = "SELECT fileData,fileSize,fileName FROM UploadedFiles WHERE id = ?";
+            PreparedStatement fileStmt = conn.prepareStatement(retrievalQuery);
+            fileStmt.setInt(1, fileID);
+
+            ResultSet returnedFiles = fileStmt.executeQuery();
+            if (returnedFiles.next()) {
+                result = new FileDownloadData();
+                result.fileInputStream = new ByteArrayInputStream(returnedFiles.getBinaryStream(1).readAllBytes());
+                result.fileSize = returnedFiles.getLong(2);
+                result.fileName = returnedFiles.getString(3);
+            }
+
+            fileStmt.close();
+
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public List<UploadedFileBean> getFilesForReport(int id){
+        List<UploadedFileBean> results = new ArrayList<>();
+        try (Connection conn = JDBCUtil.get().createConnection()){
+            String creationQuery = "SELECT id,fileName,fileSize FROM UploadedFiles WHERE issueID = ?";
+            PreparedStatement fileStmt = conn.prepareStatement(creationQuery);
+            fileStmt.setInt(1, id);
+
+            ResultSet returnedFiles = fileStmt.executeQuery();
+            while (returnedFiles.next()) {
+                UploadedFileBean fileBean = new UploadedFileBean();
+                fileBean.setFileID(returnedFiles.getInt(1));
+                fileBean.setFileName(returnedFiles.getString(2));
+                fileBean.setFileSize(returnedFiles.getLong(3));
+
+                String sizeString = String.format("%,d", fileBean.getFileSize()) + " B";
+                fileBean.setFileSizeString(sizeString);
+                results.add(fileBean);
+            }
+
+            fileStmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return results;
+    }
+
+
 }

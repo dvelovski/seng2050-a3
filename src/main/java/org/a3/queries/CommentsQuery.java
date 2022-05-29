@@ -15,14 +15,14 @@ import java.sql.*;
 import java.util.*;
 
 import org.a3.beans.CommentsBean;
-import org.a3.beans.JDBCConfigBean;
+import org.a3.services.JDBCUtil;
 
 public class CommentsQuery {
     //Method for retrieving all stored comments from database
     public static List<CommentsBean> getComments() {
         String query = "SELECT * FROM Comments";
         List<CommentsBean> comments = new LinkedList<>();
-        try (Connection connection = JDBCConfigBean.get().createConnection();
+        try (Connection connection = JDBCUtil.get().createConnection();
              Statement statement = connection.createStatement();
              ResultSet result = statement.executeQuery(query);) {
             while (result.next()) //Iterate over and collect all data from each tuple in table

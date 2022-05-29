@@ -1,4 +1,4 @@
-package org.a3.beans;
+package org.a3.services;
 
 import javax.servlet.ServletContext;
 import java.io.BufferedReader;
@@ -7,13 +7,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.*;
 
-public class JDBCConfigBean
+public class JDBCUtil
 {
-    private static JDBCConfigBean instance;
+    private static JDBCUtil instance;
     private String dbURL;
     private String dbUser;
     private String dbPass;
-    public JDBCConfigBean(){
+    public JDBCUtil(){
 
     }
     public void loadConfig(ServletContext context){
@@ -36,9 +36,9 @@ public class JDBCConfigBean
                 dbPass);
     }
 
-    public static JDBCConfigBean get(){
+    public static JDBCUtil get(){
         if (instance == null) {
-            instance = new JDBCConfigBean();
+            instance = new JDBCUtil();
         }
         return instance;
     }

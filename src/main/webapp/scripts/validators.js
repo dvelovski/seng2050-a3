@@ -162,14 +162,3 @@ function validateSearchForm(frm){
 
     return searchBox.value.length !== 0;
 }
-
-window.addEventListener("load", function(){
-    console.log("onLoad");
-    let errorDivs = document.querySelectorAll(".input_container_error");
-    for (let i = 0; i < errorDivs.length; i++){
-        if (errorDivs[i].innerHTML.trim().length > 0){
-            errorDivs[i].style.display = "block";
-            fieldsWithErrors.push(errorDivs[i]);
-        }
-    }
-}, false);

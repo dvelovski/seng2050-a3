@@ -7,7 +7,6 @@
 <script src="scripts/validators.js"></script>
 <script>
     window.addEventListener("load", function(){
-        console.log("onLoad");
         let errorDivs = document.querySelectorAll(".input_container_error");
         for (let i = 0; i < errorDivs.length; i++){
             if (errorDivs[i].innerHTML.trim().length > 0){

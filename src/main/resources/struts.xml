@@ -32,7 +32,7 @@
         </action>
         <action name="reportissue" class="org.a3.actions.CreateIssueAction" method="execute">
             <result name="success">/WEB-INF/createissue.jsp</result>
-            <result name="forbidden" type="chain">403</result> <!-- 403 - forbidden - can't do this -->
+            <result name="forbidden" type="chain">403</result>
             <result name="unauthorized" type="chain">401</result>
         </action>
         <action name="submitissue" class="org.a3.actions.IssueSubmitAction" method="execute">
@@ -49,14 +49,14 @@
                 <param name="id">${resultingIssueID}</param>
             </result>
             <result name="error" type="redirectAction">reportissue</result>
-            <result name="forbidden" type="chain">403</result> <!-- 403 - forbidden - can't do this -->
+            <result name="forbidden" type="chain">403</result>
             <result name="unauthorized" type="chain">401</result>
         </action>
         <action name="issuecomment" class="org.a3.actions.IssueCommentAction">
             <result name="success" type="redirectAction">
                 <param name="actionName">viewissue</param>
                 <param name="id">${issueID}</param>
-                <param name="anchor">${newCommentID}</param>
+                <param name="anchor">comment${newCommentID}</param>
             </result>
             <result name="error" type="redirectAction">
                 <param name="actionName">viewissue</param>

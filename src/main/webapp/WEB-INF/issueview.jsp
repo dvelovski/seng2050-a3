@@ -114,7 +114,7 @@
                     </div>
                     <s:if test="allowCommentInput == true">
                         <div class="divider"></div>
-                        <s:form action="issuecomment" class="column">
+                        <s:form action="issuecomment" class="column" method="post"> <!-- TODO validate -->
                             <div class="input_container_outer">
                                 <div>Add a new reply:</div>
                                 <div class="input_container_inner">
@@ -138,6 +138,8 @@
                                     <div class="input_container icon unselectable right_side">&#10095;</div>
                                 </div>
                             </div>
+
+                            <input type="hidden" name="issueID" value="<s:property value="issueReport.id" />">
                         </s:form>
                     </s:if>
 

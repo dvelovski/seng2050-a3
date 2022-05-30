@@ -65,7 +65,13 @@
             <result name="unauthorized" type="chain">401</result>
         </action>
 
-        <action name="promotekb">
+        <action name="promotekb" class="org.a3.actions.KnowledgeBasePrepareAction" method="execute">
+            <result name="success">/WEB-INF/promotekb.jsp</result>
+            <result name="forbidden" type="chain">403</result>
+            <result name="unauthorized" type="chain">401</result>
+            <result name="error">/WEB-INF/promotekb.jsp</result>
+        </action>
+        <action name="submitkb" class="org.a3.actions.KnowledgeBasePrepareAction" method="execute">
             <result name="success">/WEB-INF/promotekb.jsp</result>
             <result name="forbidden" type="chain">403</result>
             <result name="unauthorized" type="chain">401</result>

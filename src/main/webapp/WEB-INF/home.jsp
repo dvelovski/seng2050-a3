@@ -109,7 +109,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- TODO add the "stress" metrics -->
                     <div class="tracker_table">
                         <div class="table_content_row">
                             <div class="table_row_inner header">

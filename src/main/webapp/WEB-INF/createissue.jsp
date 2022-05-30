@@ -145,8 +145,6 @@
                 attachmentItem.appendChild(attachmentIcon);
                 attachmentItem.appendChild(attachmentDetails);
 
-                //TODO size units for files
-
                 return attachmentItem;
             }
         </script>

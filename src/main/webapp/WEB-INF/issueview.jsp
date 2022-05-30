@@ -13,7 +13,6 @@
 
         <div class="body_main">
             <s:include value="common/navbuttons.jsp" />
-
             <div class="body_box body_widget">
                 <div class="form_header flex_row">
                     <h2><s:property value="issueReport.title" /></h2>
@@ -24,13 +23,32 @@
 
                 <div class="article bar title">
                     <div class="group left">
-                        <div class="ddd"><span>Posted by </span><span class="boldtext"><s:property value="issueReport.createdBy" /></span> on <span><s:property value="issueReport.reportedAt" /></span></div>
-                        <s:if test="issueReport.assignedToName.length > 0">
-                            <div class="ddd"><span>Assigned to </span><span class="boldtext"><s:property value="issueReport.assignedToName" /></span></div>
+                        <div class="ddd"><span>Posted by </span><span class="boldtext"><s:property value="issueReport.createdBy" default="unknown"/></span> on <span><s:property value="issueReport.reportedAt" /></span></div>
+                        <s:if test="showAssignedUser == true">
+                            <div class="ddd"><span>Assigned to </span><span class="boldtext"><s:property value="issueReport.assignedToName" default="unknown"/></span></div>
                         </s:if>
-
+                        <div>
+                            <span>Filed under: </span>
+                            <span class="boldtext"><s:property value="issueReport.category" /></span> &#x3e; <span class="boldtext"><s:property value="issueReport.subCategory" /></span>
+                        </div>
+                        <s:if test="showKBSegment == true">
+                            <div class="in_article_kb_hero">
+                                This issue has been added to the Knowledge Base
+                            </div>
+                        </s:if>
                     </div>
+                    <div class="group right">
+                        <s:url action="promotekb" var="promo_link">
+                            <s:param name="reportID" value="issueReport.id" />
+                        </s:url>
 
+
+                        <s:if test="showKBPromotion == true">
+                            <div class="input_container_inner flex_reverse clickable" onclick="window.location='<s:property value="promo_link" />'">
+                                <button type="button">Send to Knowledge Base</button>
+                            </div>
+                        </s:if>
+                    </div>
                 </div>
                 <div class="divider"></div>
                 <div class="article bar contents">
@@ -94,7 +112,7 @@
                             </div>
                         </div>
                     </div>
-                    <s:if test="showComments == true">
+                    <s:if test="allowCommentInput == true">
                         <div class="divider"></div>
                         <s:form action="issuecomment" class="column">
                             <div class="input_container_outer">
@@ -107,7 +125,7 @@
                                 </div>
                             </div>
 
-                            <s:if test="#session.userBean.userType.toString == 'Staff'">
+                            <s:if test="allowCommentMarkAsSolution == true">
                                 <div class="input_container_outer">
                                     <input type="checkbox" id="cResolvesIssue" name="cResolvesIssue" />
                                     <label for="cResolvesIssue">Mark as Resolved</label>

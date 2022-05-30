@@ -24,7 +24,6 @@ public class ProfileAction extends BaseSessionAwareAction{
         SessionManager sm = SessionManager.get();
 
         if (sm.isLoggedIn(userSessionObject)) {
-            /* TODO if user is not staff, is this their own profile? If not, forbidden. */
             UserBean currentUser = sm.getUserBean(userSessionObject);
             UserQuery userQuery = new UserQuery();
 

@@ -9,36 +9,30 @@ import java.sql.*;
 
 public class UserQuery {
     public UserBean loginQuery(String username, String password) throws SQLException {
-        Connection conn = DriverManager.getConnection(
-                "jdbc:sqlserver://seng2050-a3.database.windows.net:1433;databaseName=SENG2050_A3",
-                "seng2050_admin",
-                "hf%yY6u*i7(Py@");
-        //TODO replace
+        try (Connection conn = JDBCUtil.get().createConnection()){
+            String loginQuery = "SELECT id,firstName,lastName,userRole FROM SENG2050_A3.dbo.Users WHERE userName=? AND userpassword=?";
+            PreparedStatement statement = conn.prepareStatement(loginQuery);
+            statement.setString(1, username);
+            statement.setString(2, password);
 
-        String loginQuery = "SELECT id,firstName,lastName,userRole FROM SENG2050_A3.dbo.Users WHERE userName=? AND userpassword=?";
-        PreparedStatement statement = conn.prepareStatement(loginQuery);
-        statement.setString(1, username);
-        statement.setString(2, password);
+            ResultSet loginResult = statement.executeQuery();
 
-        ResultSet loginResult = statement.executeQuery();
-        System.out.println("user: " + username);
-        int rowNum = 0;
+            UserBean result = null;
+            if (loginResult.next()){
+                result = new UserBean();
+                result.setUserIdentification(loginResult.getInt(1));
+                result.setUserFirstName(loginResult.getString(2));
+                result.setUserLastName(loginResult.getString(3));
 
-        UserBean result = null;
-        if (loginResult.next()){
-            result = new UserBean();
-            result.setUserIdentification(loginResult.getInt(1));
-            result.setUserFirstName(loginResult.getString(2));
-            result.setUserLastName(loginResult.getString(3));
+                int role = loginResult.getInt(4);
+                result.setUserType(UserType.values()[role - 1]);
+            }
 
-            int role = loginResult.getInt(4);
-            result.setUserType(UserType.values()[role - 1]);
+            statement.close();
+            conn.close();
+
+            return result;
         }
-
-        statement.close();
-        conn.close();
-
-        return result;
     }
     public UserBean userDetailsQuery(int userID) throws SQLException {
         try (Connection conn = JDBCUtil.get().createConnection()) {
@@ -76,9 +70,10 @@ public class UserQuery {
     }
     public String[] createUser(String uFirstName, String uLastName, String uEmail, String uPhone, int userType) throws SQLException{
         //STUB!
-        String newUserName = (uLastName.length() < 5 ? uLastName : uLastName.substring(0, 5)); //if there are less than 5 characters in the surname, start with that
-        newUserName += (uFirstName.length() < 3 ? uFirstName : uFirstName.substring(0, 3)); //if there are less than 3 characters in first name, append the whole thing
-        //gives us minimum of 8 characters' length BEFORE accounting for any existing users with the same name. if there are existing users, add a counter and increse it until there are no matches
+        String newUserName = (uLastName.length() < 6 ? uLastName : uLastName.substring(0, 6)); //if there are less than 6 characters in the surname, start with that
+        newUserName += (uFirstName.length() < 2 ? uFirstName : uFirstName.substring(0, 2)); //if there are less than 2 characters in first name, append the whole thing
+        //gives us minimum of 8 characters' length BEFORE accounting for any existing users with the same name.
+        //if there are existing users, add a counter and increse it until there are no matches
 
         String finalPassword = PasswordGenerator.get().generatePassword(8);
 

@@ -1,4 +1,3 @@
-//TODO list
 let fieldsWithErrors = [];
 
 function resetState(){
@@ -70,6 +69,41 @@ function validateIssueReport(frm){
         result = false;
     }else if (tbDesc.value.length > 4096){
         fieldError(tbDesc, "Description exceeds maximum allowed length of 4096 characters");
+        result = false;
+    }
+
+    return result;
+}
+
+function validateKnowledgeBasePromotion(frm){
+    resetState();
+
+    let result = true;
+
+    let tbTitle = frm.elements["kbArticleName"];
+    let tbDesc = frm.elements["kbArticleDesc"];
+    let tbResolution = frm.elements["kbArticleResolution"];
+
+    tbTitle.value = tbTitle.value.trim();
+    tbDesc.value = tbDesc.value.trim();
+    tbResolution.value = tbResolution.value.trim();
+
+    if (tbTitle.value.length === 0){
+        fieldError(tbTitle, "Issue title may not be blank");
+        result = false;
+    }
+    if (tbDesc.value.length === 0){
+        fieldError(tbDesc, "Description may not be blank");
+        result = false;
+    }else if (tbDesc.value.length > 4096){
+        fieldError(tbDesc, "Description exceeds maximum allowed length of 4096 characters");
+        result = false;
+    }
+    if (tbResolution.value.length === 0){
+        fieldError(tbResolution, "Resolution may not be blank");
+        result = false;
+    }else if (tbResolution.value.length > 4096){
+        fieldError(tbResolution, "Resolution exceeds maximum allowed length of 4096 characters");
         result = false;
     }
 

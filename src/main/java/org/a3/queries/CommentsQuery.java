@@ -24,7 +24,7 @@ public class CommentsQuery {
         List<CommentsBean> comments = new LinkedList<>();
         try (Connection connection = JDBCUtil.get().createConnection();
              Statement statement = connection.createStatement();
-             ResultSet result = statement.executeQuery(query);) {
+             ResultSet result = statement.executeQuery(query)) {
             while (result.next()) //Iterate over and collect all data from each tuple in table
             {
                 CommentsBean comment = new CommentsBean();
@@ -35,9 +35,12 @@ public class CommentsQuery {
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-            System.err.println(e.getStackTrace());
         }
         return comments;
+    }
+
+    public void addCommentToReport(int reportID, String commentText, boolean markResolved){
+        /* todo stub */
     }
 }
 

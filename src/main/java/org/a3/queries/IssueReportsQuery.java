@@ -30,7 +30,7 @@ public class IssueReportsQuery
         List<IssueReportBean> reports = new LinkedList<>();
         try (Connection connection = JDBCUtil.get().createConnection();
              Statement statement = connection.createStatement();
-             ResultSet result = statement.executeQuery(query);)
+             ResultSet result = statement.executeQuery(query))
         {
             while (result.next()) //Iterate over and collect all data from each tuple in database
             {
@@ -129,35 +129,37 @@ public class IssueReportsQuery
             if (generatedKeys.next()){
                 issueResultID = (int) generatedKeys.getLong(1);
             }
-            System.out.println("new issue ID: " + issueResultID);
+            //System.out.println("new issue ID: " + issueResultID);
 
             insertStmt.close();
 
-            //insert the files
-            String fileUploadQuery = "INSERT INTO UploadedFiles (issueID, uploadedBy, mime, fileName, fileData, fileSize) VALUES (?, ?, ?, ?, ?, ?)";
-            PreparedStatement ulStmt = conn.prepareStatement(fileUploadQuery);
+            //insert the files if they are PRESENT
+            if (files != null && !files.isEmpty()){
+                String fileUploadQuery = "INSERT INTO UploadedFiles (issueID, uploadedBy, mime, fileName, fileData, fileSize) VALUES (?, ?, ?, ?, ?, ?)";
+                PreparedStatement ulStmt = conn.prepareStatement(fileUploadQuery);
 
-            for (int f = 0, fSize = files.size(); f < fSize; f++){
-                ulStmt.setInt(1, issueResultID);
-                ulStmt.setInt(2, iAuthor);
-                ulStmt.setString(3, fileMimes.get(f));
-                ulStmt.setString(4, fileNames.get(f));
+                for (int f = 0, fSize = files.size(); f < fSize; f++){
+                    ulStmt.setInt(1, issueResultID);
+                    ulStmt.setInt(2, iAuthor);
+                    ulStmt.setString(3, fileMimes.get(f));
+                    ulStmt.setString(4, fileNames.get(f));
 
-                Path p = files.get(f).toPath();
-                try {
-                    long size = Files.size(p);
-                    ulStmt.setBinaryStream(5, Files.newInputStream(p));
-                    ulStmt.setLong(6, size);
-                    //separate try-catch because i don't want to halt the process if one file fails.
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    Path p = files.get(f).toPath();
+                    try {
+                        long size = Files.size(p);
+                        ulStmt.setBinaryStream(5, Files.newInputStream(p));
+                        ulStmt.setLong(6, size);
+                        //separate try-catch because i don't want to halt the process if one file fails.
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    //System.out.println("Uploading: " + fileNames.get(f));
+                    ulStmt.execute();
                 }
 
-                System.out.println("Uploading: " + fileNames.get(f));
-                ulStmt.execute();
+                ulStmt.close();
             }
-
-            ulStmt.close();
 
         } catch (SQLException e) {
             e.printStackTrace();

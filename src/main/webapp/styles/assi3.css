@@ -47,7 +47,7 @@ textarea.four_lines{
 textarea.eight_lines{
     height: 8em;
 }
-form.column{
+.column{
     flex-direction: column;
 }
 .logo{
@@ -592,5 +592,10 @@ form.column{
     grid-column: 2;
     border-left: 1px solid;
     padding: 0.5em 0 0 2em;
-    
+}
+.in_article_kb_hero{
+    margin: 1em 0 0.5em 0;
+    background: #90caf9;
+    border-radius: 4px;
+    padding: 0.25em;
 }

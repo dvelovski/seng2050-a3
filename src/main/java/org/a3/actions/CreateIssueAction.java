@@ -19,4 +19,7 @@ public class CreateIssueAction extends BaseSessionAwareAction{
         }
         return ResponseCodes.UNAUTHORIZED;
     }
+
+    public void setReportID(String reportID) {
+    }
 }

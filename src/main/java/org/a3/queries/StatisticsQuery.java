@@ -36,8 +36,6 @@ public class StatisticsQuery
                     "        RIGHT JOIN Category ON SubCategory.subCategoryOf = Category.id\n" +
                     "GROUP BY SubCategory.id, SubCategory.subCategoryOf, Category.id, SubCategory.categoryName, Category.categoryName";
 
-            //TODO change the conditions for the 'resolved in last 7 days' query
-            //TODO need a test / condition for 'total unresolved'. i.e. IIF IssueReports.acceptedSolution == 0, 1, NULL
             //COUNT ignores null values
 
             PreparedStatement statsStatement = conn.prepareStatement(statsQuery);

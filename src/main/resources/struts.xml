@@ -61,6 +61,7 @@
             <result name="error" type="redirectAction">
                 <param name="actionName">viewissue</param>
                 <param name="id">${issueID}</param>
+                <param name="commentErrorMessage">${creationErrorMessage}</param>
             </result>
             <result name="unauthorized" type="chain">401</result>
         </action>

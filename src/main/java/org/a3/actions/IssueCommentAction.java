@@ -3,6 +3,7 @@ package org.a3.actions;
 import org.a3.beans.IssueReportBean;
 import org.a3.beans.UserBean;
 import org.a3.beans.UserType;
+import org.a3.queries.CommentsQuery;
 import org.a3.queries.IssueReportsQuery;
 import org.a3.services.SessionManager;
 import org.a3.services.constants.ResponseCodes;
@@ -43,6 +44,13 @@ public class IssueCommentAction extends BaseSessionAwareAction{
                 }
                 if (innerValidation){
                     //TODO submit
+                    try (CommentsQuery icQuery = new CommentsQuery()){
+                        newCommentID = icQuery.createComment(user.getUserIdentification(), reportBean.getId(), cCommentText);
+                    } catch (Exception e) {
+                        creationErrorMessage = e.getMessage();
+                        innerStatus = ERROR;
+                    }
+
                 }
             }else{
                 innerStatus = ERROR;

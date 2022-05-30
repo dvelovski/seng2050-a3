@@ -12,8 +12,11 @@ package org.a3.queries; /**
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.sql.*;
+import java.util.Date;
 
 import com.microsoft.sqlserver.jdbc.SQLServerStatement;
 import org.a3.beans.UploadedFileBean;
@@ -54,7 +57,15 @@ public class IssueReportsQuery
     }
 
     public List<IssueReportBean> getIssueReports(int forUser, int offset, int count){
-        //TODO stub
+        /*
+            TODO stub
+            the front-end only needs
+             - issueID for navigation
+             - user's first and last names (concatenated is easier, see getIssueReport())
+             - issueStatus as a char (refer getIssueReport())
+             - issuestatus as an int
+             - issueDescription
+        */
         return null;
     }
     public IssueReportBean getIssueReport(int issueID){
@@ -87,6 +98,9 @@ public class IssueReportsQuery
             fetchStmt.setInt(1, issueID);
 
             ResultSet result = fetchStmt.executeQuery();
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+
             while (result.next()){
                 report = new IssueReportBean();
                 report.setId(result.getInt(1));
@@ -96,8 +110,17 @@ public class IssueReportsQuery
                 report.setIssueDescription(result.getString(5));
                 report.setIssueStatus(result.getInt(6));
                 report.setIssueStatusString(result.getString(7));
-                report.setReportedAt(result.getString(8));
-                report.setResolvedAt(result.getString(9));
+
+                Date reportedAt = result.getTimestamp(8);
+                report.setReportedAt(dateFormat.format(reportedAt) + " at " + timeFormat.format(reportedAt));
+
+                Date resolvedAt = result.getTimestamp(9);
+                if (resolvedAt != null){
+                    report.setResolvedAt(dateFormat.format(resolvedAt) + " at " + timeFormat.format(resolvedAt));
+                }else{
+                    report.setResolvedAt("");
+                }
+
                 report.setLocked(result.getBoolean(10));
                 report.setProposedSolution(result.getInt(11));
                 report.setAcceptedSolution(result.getInt(12));
@@ -133,7 +156,7 @@ public class IssueReportsQuery
 
             insertStmt.close();
 
-            //insert the files if they are PRESENT
+            //insert the files if they are PRESENT lol
             if (files != null && !files.isEmpty()){
                 String fileUploadQuery = "INSERT INTO UploadedFiles (issueID, uploadedBy, mime, fileName, fileData, fileSize) VALUES (?, ?, ?, ?, ?, ?)";
                 PreparedStatement ulStmt = conn.prepareStatement(fileUploadQuery);

@@ -1,9 +1,7 @@
 package org.a3.actions;
 
-import org.a3.beans.IssueReportBean;
-import org.a3.beans.UploadedFileBean;
-import org.a3.beans.UserBean;
-import org.a3.beans.UserType;
+import org.a3.beans.*;
+import org.a3.queries.CommentsQuery;
 import org.a3.queries.IssueReportsQuery;
 import org.a3.services.SessionManager;
 import org.a3.services.constants.ResponseCodes;
@@ -14,6 +12,7 @@ public class IssueAction extends BaseSessionAwareAction{
     private int id;
     private IssueReportBean issueReport;
     private List<UploadedFileBean> issueFiles;
+    private List<CommentsBean> issueComments;
     private String statusClass = "issue_status_text ";
 
     private boolean allowCommentInput;
@@ -84,15 +83,21 @@ public class IssueAction extends BaseSessionAwareAction{
                     //get files
                     issueFiles = viewQuery.getFilesForReport(id);
 
+                    try (CommentsQuery cQuery = new CommentsQuery()){
+                        issueComments = cQuery.getReportComments(id);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+
                     return SUCCESS;
                 }else{
-                    return ResponseCodes.UNAUTHORIZED;
+                    return ResponseCodes.FORBIDDEN;
                 }
             }else{
                 return ERROR;
             }
         }else{
-            return ResponseCodes.FORBIDDEN;
+            return ResponseCodes.UNAUTHORIZED;
         }
     }
 
@@ -148,4 +153,7 @@ public class IssueAction extends BaseSessionAwareAction{
         return showAssignedUser;
     }
 
+    public List<CommentsBean> getIssueComments() {
+        return issueComments;
+    }
 }

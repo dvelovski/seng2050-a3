@@ -23,9 +23,9 @@
 
                 <div class="article bar title">
                     <div class="group left">
-                        <div class="ddd"><span>Posted by </span><span class="boldtext"><s:property value="issueReport.createdBy" default="unknown"/></span> on <span><s:property value="issueReport.reportedAt" /></span></div>
+                        <div class="ddd"><span>Posted by </span><span class="boldtext"><s:property escapeHtml="true" value="issueReport.createdBy" default="unknown"/></span> on <span><s:property value="issueReport.reportedAt" default="unknown" /></span></div>
                         <s:if test="showAssignedUser == true">
-                            <div class="ddd"><span>Assigned to </span><span class="boldtext"><s:property value="issueReport.assignedToName" default="unknown"/></span></div>
+                            <div class="ddd"><span>Assigned to </span><span class="boldtext"><s:property escapeHtml="true" value="issueReport.assignedToName" default="unknown"/></span></div>
                         </s:if>
                         <div>
                             <span>Filed under: </span>
@@ -53,12 +53,12 @@
                 <div class="divider"></div>
                 <div class="article bar contents">
                     <span class="boldtext">Issue description:</span>
-                    <div><s:property value="issueReport.issueDescription" /></div>
+                    <div><s:property escapeHtml="true" value="issueReport.issueDescription" /></div>
                 </div>
                 <div class="divider"></div>
                 <div class="article bar attachments">
                     <s:if test="issueFiles.size > 0">
-                        <span>Attachments <span class="boldtext">(<s:property value="issueFiles.size" />)</span>:</span>
+                        <span class="boldtext">Attachments (<s:property value="issueFiles.size" />)</span>:
                         <div class="inner_attachmentbar">
                         <s:iterator value="issueFiles">
                             <s:url action="download" var="dlLink">
@@ -69,7 +69,7 @@
                                     &#128206;
                                 </div>
                                 <div class="attachment_details" title="<s:property value="fileName" />">
-                                    <s:property value="fileName" /><br>
+                                    <s:property escapeHtml="true" value="fileName" /><br>
                                     <s:property value="fileSizeString" />
                                 </div>
                             </a>
@@ -77,7 +77,7 @@
                         </div>
                     </s:if>
                     <s:else>
-                        <span>Attachments:</span>
+                        <span class="boldtext">Attachments:</span>
                         <div class="inner_attachmentbar">
                             <s:property value="issueReport.createdBy" /> did not upload any files.
                         </div>
@@ -85,32 +85,24 @@
                 </div>
                 <div class="divider"></div>
                 <div class="article bar replies">
-                    <span>Replies <span class="boldtext">(3)</span>:</span>
+                    <span class="boldtext">Replies (<s:property value="issueComments.size" />)</span>:
                     <div class="article replies_outer">
-                        <div class="article_reply_inner">
-                            <div class="article_reply_header boldtext">
-                                Lol
+                        <s:if test="issueComments.size == 0">
+                            <div class="article_reply_inner">
+                                No comments have been posted on this issue yet.
                             </div>
-                            <div class="article_reply_comment">
-                                123
+                        </s:if>
+                        <s:iterator value="issueComments">
+                            <div class="article_reply_inner">
+                                <a id="comment<s:property value="commentID" />"></a>
+                                <div class="article_reply_header">
+                                    <span class="boldtext"><s:property escapeHtml="true" value="postedByName"/></span> <span class="small_italic"><s:property value="postedAt" default="unknown"/></span>
+                                </div>
+                                <div class="article_reply_comment">
+                                    <s:property escapeHtml="true" value="content" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="article_reply_inner">
-                            <div class="article_reply_header boldtext">
-                                Lol
-                            </div>
-                            <div class="article_reply_comment">
-                                123
-                            </div>
-                        </div>
-                        <div class="article_reply_inner accepted">
-                            <div class="article_reply_header boldtext">
-                                Lol
-                            </div>
-                            <div class="article_reply_comment">
-                                123
-                            </div>
-                        </div>
+                        </s:iterator>
                     </div>
                     <s:if test="allowCommentInput == true">
                         <div class="divider"></div>

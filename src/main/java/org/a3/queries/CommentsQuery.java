@@ -15,6 +15,7 @@ import java.sql.*;
 import java.util.*;
 
 import org.a3.beans.CommentsBean;
+import org.a3.beans.IssueReportBean;
 import org.a3.services.JDBCUtil;
 
 public class CommentsQuery {
@@ -39,8 +40,18 @@ public class CommentsQuery {
         return comments;
     }
 
-    public void addCommentToReport(int reportID, String commentText, boolean markResolved){
+    public void createComment(int reportID, String commentText, boolean markResolved){
         /* todo stub */
+    }
+
+    public List<CommentsBean> getReportComments(int reportID){
+        /* todo stub */
+        return null;
+    }
+
+    public IssueReportBean getComment(int commentID){
+        /* todo stub */
+        return null;
     }
 }
 

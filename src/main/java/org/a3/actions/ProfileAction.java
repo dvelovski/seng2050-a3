@@ -19,6 +19,7 @@ public class ProfileAction extends BaseSessionAwareAction{
     private String uPhone = "";
 
     private String pageTitle;
+    private boolean notFound = false;
     @Override
     public String doExecute() {
         SessionManager sm = SessionManager.get();
@@ -36,16 +37,17 @@ public class ProfileAction extends BaseSessionAwareAction{
                 }
 
                 if (userBean != null){
-                    if (action.isEmpty()){
-                        pageTitle = "User details - " + userBean.getUserFirstName() + " " + userBean.getUserLastName();
-                        return SUCCESS;
-                    }else if (action.equals("editor")){
+                    if (action.equals("editor")){
                         pageTitle = "Editing user details";
-                        return SUCCESS;
+                    }else{
+                        pageTitle = "User details - " + userBean.getUserFirstName() + " " + userBean.getUserLastName();
                     }
                 }else{
-                    return ResponseCodes.NOTFOUND;
+                    pageTitle = "Not found";
+                    notFound = true;
                 }
+
+                return SUCCESS;
             }else{
                 return ResponseCodes.FORBIDDEN;
             }
@@ -107,5 +109,9 @@ public class ProfileAction extends BaseSessionAwareAction{
 
     public String getPageTitle() {
         return pageTitle;
+    }
+
+    public boolean getNotFound(){
+        return notFound;
     }
 }

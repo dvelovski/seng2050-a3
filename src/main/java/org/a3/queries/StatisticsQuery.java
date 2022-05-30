@@ -26,15 +26,15 @@ public class StatisticsQuery
             String statsQuery = "SELECT\n" +
                     "    SubCategory.id,\n" +
                     "    SubCategory.categoryName AS \"Subcategory Name\",\n" +
-                    "    (SELECT Category.categoryName WHERE Category.id = SubCategory.subCategoryOf) AS \"Subcategory Of\",\n" +
+                    "    (SELECT Category.categoryName WHERE dbo.Category.id = SubCategory.subCategoryOf) AS \"Subcategory Of\",\n" +
                     "    Category.id,\n" +
-                    "    COUNT(cat) AS \"Total Unresolved\",\n" +
-                    "    COUNT((IIF(val >= 10, 1, NULL))) AS \"Resolved In Last 7 Days\"\n" +
+                    "    COUNT((IIF(IR.issueStatus < 4, 1, NULL))) AS \"Total Unresolved\",\n" +
+                    "    COUNT((IIF(IR.acceptedSolution > 0 AND resolvedAt >= DATEADD(day, -7, CURRENT_TIMESTAMP), 1, NULL))) AS \"Resolved In Last 7 Days\"\n" +
                     "FROM\n" +
-                    "    Test1\n" +
-                    "RIGHT JOIN SubCategory ON Test1.cat = SubCategory.id\n" +
-                    "RIGHT JOIN Category ON SubCategory.subCategoryOf = Category.id\n" +
-                    "GROUP BY SubCategory.id, SubCategory.subCategoryOf, Category.id, SubCategory.categoryName, Category.categoryName;";
+                    "    IssueReports IR\n" +
+                    "        RIGHT JOIN SubCategory ON IR.category = SubCategory.id\n" +
+                    "        RIGHT JOIN Category ON SubCategory.subCategoryOf = Category.id\n" +
+                    "GROUP BY SubCategory.id, SubCategory.subCategoryOf, Category.id, SubCategory.categoryName, Category.categoryName";
 
             //TODO change the conditions for the 'resolved in last 7 days' query
             //TODO need a test / condition for 'total unresolved'. i.e. IIF IssueReports.acceptedSolution == 0, 1, NULL
@@ -80,13 +80,14 @@ public class StatisticsQuery
 
     public double getStressRate() throws SQLException{
         try (Connection conn = JDBCUtil.get().createConnection()){
-            String stressQuery = "SELECT (SELECT COUNT(*) FROM IssueReports WHERE acceptedSolution = 0) AS \"Unresolved Issues\", \n" +
+            String stressQuery = "SELECT (SELECT COUNT(*) FROM IssueReports WHERE ISNULL(acceptedSolution, 0) = 0) AS \"Unresolved Issues\", \n" +
                     "(SELECT COUNT(*) FROM Users WHERE userRole = 2) AS \"Staff Count\"";
 
             PreparedStatement stressStatements = conn.prepareStatement(stressQuery);
             stressStatements.executeQuery();
 
             ResultSet stressResults = stressStatements.getResultSet();
+            stressResults.next();
             double tUnresolved = stressResults.getInt(1);
             double tStaff = stressResults.getInt(2);
 

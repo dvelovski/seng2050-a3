@@ -40,7 +40,7 @@
                 <div class="divider"></div>
                 <div class="article bar attachments">
                     <s:if test="issueFiles.size > 0">
-                        <span>Attachments (<span class="boldtext"><s:property value="issueFiles.size" /></span>):</span>
+                        <span>Attachments <span class="boldtext">(<s:property value="issueFiles.size" />)</span>:</span>
                         <div class="inner_attachmentbar">
                         <s:iterator value="issueFiles">
                             <s:url action="download" var="dlLink">

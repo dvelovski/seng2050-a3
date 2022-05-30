@@ -17,7 +17,15 @@ public class IssueAction extends BaseSessionAwareAction{
     private String statusClass = "issue_status_text ";
 
     //TODO showComments
-    private boolean showComments = true;
+    private boolean allowCommentInput;
+    private boolean allowCommentMarkAsSolution;
+
+    private boolean showKBSegment; //if promoted to knowledge base, link to it here
+    private boolean showKBPromotion;
+
+    private boolean showAcceptanceOptions;
+
+    private boolean showAssignedUser;
 
     @Override
     public String doExecute() {
@@ -45,8 +53,21 @@ public class IssueAction extends BaseSessionAwareAction{
                         statusClass += "completed";
                         break;
                 }
+                switch (issueReport.getIssueStatus()){
+                    case 1: /* new */
+                        allowCommentInput = false;
+                        break;
+                }
 
-                showComments = !issueReport.getLocked();
+                if (issueReport.getLocked()){
+                    allowCommentInput = false;
+                    allowCommentMarkAsSolution = false;
+                }
+                if (issueReport.getKnowledgeBaseArticleID() != 0){
+                    showKBSegment = true;
+                    showKBPromotion = false;
+                }
+
                 //get files
                 issueFiles = viewQuery.getFilesForReport(id);
                 System.out.println(issueFiles);
@@ -84,10 +105,6 @@ public class IssueAction extends BaseSessionAwareAction{
 
     public String getStatusClass() {
         return statusClass;
-    }
-
-    public boolean getShowComments() {
-        return showComments;
     }
 
     public List<UploadedFileBean> getIssueFiles() {

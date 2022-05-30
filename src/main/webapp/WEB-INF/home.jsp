@@ -99,8 +99,15 @@
                     <div class="form_header">
                         <h2>Tracker Statistics</h2>
                     </div>
-                    <div class="article bar">
+                    <div class="article bar rel">
                         <span class="boldtext">Stress rate</span> <s:property value="stressRate" />
+                        <span class="description_tooltip">?</span>
+                        <div class="tooltip_outer">
+                            <div class="tooltip_inner">
+                                Equal to:<br>
+                                Unsolved Issues / Number of Staff * 5
+                            </div>
+                        </div>
                     </div>
                     <!-- TODO add the "stress" metrics -->
                     <div class="tracker_table">

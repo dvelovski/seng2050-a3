@@ -206,6 +206,9 @@ form.column{
 .flex_row .group.right{
     align-self: center;
 }
+.rel{
+    position: relative;
+}
 .login_box form{
     margin-bottom: 0.5em;
     border-bottom: 1px solid #757575;

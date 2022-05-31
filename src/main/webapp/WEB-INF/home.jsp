@@ -18,78 +18,38 @@
                 </div>
                 <div class="index_table">
                     <div class="outer_element utility headerbar">
-                        Displaying items <span class="boldtext">1-10</span> of <span class="boldtext">xx</span>
+                        Displaying items <span class="boldtext"><s:property value="resultStart" />-<s:property value="resultsOnPage" /></span>
                     </div>
                     <div class="outer_element contents">
-                        <div class="index_entry">
-                            <div class="titlebar">
-                                <span class="title_text">Issue title</span>
-                                <span class="issue_status_text">Status</span>
+                        <s:iterator value="issueReports">
+                            <s:url action="viewissue" var="issue_view">
+                                <s:param name="id" value="id" />
+                            </s:url>
+                            <s:if test="issueStatus == 1">
+                                <s:set var="status_class">issue_status_text new</s:set>
+                            </s:if>
+                            <s:elseif test="issueStatus == 2">
+                                <s:set var="status_class">issue_status_text inprogress</s:set>
+                            </s:elseif>
+                            <s:elseif test="issueStatus == 3">
+                                <s:set var="status_class">issue_status_text resolved</s:set>
+                            </s:elseif>
+                            <s:elseif test="issueStatus == 4">
+                                <s:set var="status_class">issue_status_text completed</s:set>
+                            </s:elseif>
+                            <s:else>
+                                <s:set var="status_class">issue_status_text</s:set>
+                            </s:else>
+                            <div class="index_entry" onclick="window.location = '${issue_view}'" title="Click to navigate to this issue">
+                                <div class="titlebar">
+                                    <span class="title_text"><s:property value="title" /></span>
+                                    <span class="${status_class}"><s:property value="issueStatusString" /></span>
+                                </div>
+                                <div class="truncated_text">
+                                    <s:property escapeHtml="true" value="issueDescription" />
+                                </div>
                             </div>
-                            <div class="truncated_text">
-                                I used to call this “the weird WebKit flexbox way”, but in an extra weird twist, the spec now includes this as part of the overflow module, old flexbox and all.
-                            </div>
-                        </div>
-                        <div class="index_entry">
-                            <div class="titlebar">
-                                <span class="title_text">Issue title</span>
-                                <span class="issue_status_text">Status</span>
-                            </div>
-                            <div class="truncated_text">
-                                And, Firefox implemented it just like that. And with Edge-gone-Chromium, this weird technique has gotten a lot more useful instead of less.
-                            </div>
-                        </div>
-                        <div class="index_entry">
-                            <div class="titlebar">
-                                <span class="title_text">Issue title</span>
-                                <span class="issue_status_text">Status</span>
-                            </div>
-                            <div class="truncated_text">
-                                A boolean value that, if true, indicates that the function specified by listener will never call preventDefault(). If a passive listener does call preventDefault(), the user agent will do nothing other than generate a console warning.
-                            </div>
-                        </div>
-                        <div class="index_entry">
-                            <div class="titlebar">
-                                <span class="title_text">Issue title</span>
-                                <span class="issue_status_text">Status</span>
-                            </div>
-                            <div class="truncated_text">
-                                When I built the project in IntelliJ, File > New Project > Java > Web Application > Struts 2. This created the setup you will see in the picture above. It appears to have added all needed files and structure to the project, with one exception, Step 4 - Add Logging(log4j). As far as I can tell, the IntelliJ Struts2 setup pulled in most/all of the needed dependencies, except for:
-                            </div>
-                        </div>
-                        <div class="index_entry">
-                            <div class="titlebar">
-                                <span class="title_text">Issue title</span>
-                                <span class="issue_status_text">Status</span>
-                            </div>
-                            <div class="truncated_text">
-                                1) Yes, you should probably use either Maven or Gradle to manage your dependencies (it makes it way easier).
-
-                                2) If you decide to use Maven, all you gotta do is put the pom.xml that the guide you are using has in the root directory of your project. Here's the pom.
-                            </div>
-                        </div>
-                        <div class="index_entry">
-                            <div class="titlebar">
-                                <span class="title_text">Issue title</span>
-                                <span class="issue_status_text">Status</span>
-                            </div>
-                            <div class="truncated_text">
-                                • How secure is your system? Is there any way to break your system (SQL injection, XXS, modifying
-                                request parameters)?
-                                • Does your submission contain all the file necessary to install and run your system? In particular,
-                                does it contain the scripts and data files needed to create and populate the database, and does
-                                it contain a readme file briefly explaining how to install the system?
-                            </div>
-                        </div>
-                        <div class="index_entry">
-                            <div class="titlebar">
-                                <span class="title_text">Issue title</span>
-                                <span class="issue_status_text">Status</span>
-                            </div>
-                            <div class="truncated_text">
-                                #f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5#f5f5f5
-                            </div>
-                        </div>
+                        </s:iterator>
                     </div>
                     <div class="outer_element utility pagination">Pagination toolbar</div>
                 </div>

@@ -3,6 +3,7 @@ package org.a3.actions;
 import org.a3.beans.IssueReportBean;
 import org.a3.beans.StatisticsCategoryBean;
 import org.a3.beans.UserBean;
+import org.a3.queries.IssueReportsQuery;
 import org.a3.queries.StatisticsQuery;
 import org.a3.services.SessionManager;
 
@@ -18,6 +19,11 @@ public class UserHomeAction extends BaseSessionAwareAction{
     private List<IssueReportBean> issueReports;
     private List<StatisticsCategoryBean> issueCategories;
     private String stressRate;
+
+    private int pageNumber = 1;
+    private int resultsPerPage = 10;
+    private int resultsOnPage;
+    private int resultStart;
 
     @Override
     public String doExecute() {
@@ -39,10 +45,26 @@ public class UserHomeAction extends BaseSessionAwareAction{
                         statisticsError = e.getMessage();
                     }
                     //issueReports = IssueReportsQuery.getAllIssueReports();
+                    try (IssueReportsQuery iQuery = new IssueReportsQuery()){
+                        issueReports = iQuery.getIssueReports(-1, uBean.getUserIdentification(), resultsPerPage * (pageNumber - 1), resultsPerPage);
+                        resultsOnPage = Math.min(issueReports.size(), resultsPerPage);
+                        resultStart = (resultsPerPage * (pageNumber - 1)) + 1;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     break;
                 default:
                     homepageHeading = "My Issues";
                     showStatistics = false;
+
+                    try (IssueReportsQuery iQuery = new IssueReportsQuery()){
+                        issueReports = iQuery.getIssueReports(uBean.getUserIdentification(), -1, resultsPerPage * (pageNumber - 1), resultsPerPage);
+                        resultsOnPage = Math.min(issueReports.size(), resultsPerPage);
+                        resultStart = (resultsPerPage * (pageNumber - 1)) + 1;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
             }
             return SUCCESS;
@@ -72,5 +94,37 @@ public class UserHomeAction extends BaseSessionAwareAction{
 
     public String getStressRate() {
         return stressRate;
+    }
+
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public int getResultsPerPage() {
+        return resultsPerPage;
+    }
+
+    public void setResultsPerPage(int resultsPerPage) {
+        this.resultsPerPage = resultsPerPage;
+    }
+
+    public int getResultsOnPage() {
+        return resultsOnPage;
+    }
+
+    public void setResultsOnPage(int resultsOnPage) {
+        this.resultsOnPage = resultsOnPage;
+    }
+
+    public int getResultStart() {
+        return resultStart;
+    }
+
+    public void setResultStart(int resultStart) {
+        this.resultStart = resultStart;
     }
 }

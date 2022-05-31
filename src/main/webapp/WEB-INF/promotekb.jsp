@@ -55,7 +55,7 @@
                         </div>
                     </div>
                     <div class="input_container_inner">
-                        <textarea class="eight_lines tb_general" name="kbArticleDesc" id="kbArticleDesc" placeholder="Description of the issue" maxlength="4096"><s:property value="issueReport.issueDescription" /></textarea>
+                        <textarea class="eight_lines tb_general" name="kbArticleDesc" id="kbArticleDesc" placeholder="Description of the issue" maxlength="4096"><s:property escapeHtml="true" value="issueReport.issueDescription" /></textarea>
                     </div>
                     <div class="input_container_error"></div>
                 </div>
@@ -71,7 +71,7 @@
                         </div>
                     </div>
                     <div class="input_container_inner">
-                        <textarea class="eight_lines tb_general" name="kbArticleResolution" id="kbArticleResolution" placeholder="Description of the resolution steps" maxlength="4096"></textarea>
+                        <textarea class="eight_lines tb_general" name="kbArticleResolution" id="kbArticleResolution" placeholder="Description of the resolution steps" maxlength="4096"><s:property escapeHtml="true" value="acceptedSolutionText" /></textarea>
                     </div>
                     <div class="input_container_error"></div>
                 </div>
@@ -88,18 +88,15 @@
                     <div class="inner_attachmentbar">
                         <s:if test="issueFiles.size > 0">
                             <s:iterator value="issueFiles">
-                                <s:url action="download" var="dlLink">
-                                    <s:param name="requestedFileID"><s:property value="fileID"/></s:param>
-                                </s:url>
-                                <a class="inline_attachment_item" href="${dlLink}" download="<s:property value="fileName"/>">
+                                <div class="inline_attachment_item">
                                     <div class="attachment_icon">
                                         &#128206;
                                     </div>
-                                    <div class="attachment_details" title="<s:property value="fileName" />">
+                                    <div class="attachment_details" title="<s:property escapeHtml="true" value="fileName" />">
                                         <s:property value="fileName" /><br>
                                         <s:property value="fileSizeString" />
                                     </div>
-                                </a>
+                                </div>
                             </s:iterator>
                         </s:if>
                         <s:else>

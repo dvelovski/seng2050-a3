@@ -24,6 +24,7 @@ public class IssueAction extends BaseSessionAwareAction{
     private boolean showAcceptanceOptions;
 
     private boolean showAssignedUser;
+    private boolean showAssignmentOption;
 
     @Override
     public String doExecute() {
@@ -34,66 +35,78 @@ public class IssueAction extends BaseSessionAwareAction{
         if (sm.isLoggedIn(userSessionObject)) {
             UserBean user = sm.getUserBean(userSessionObject);
             //we kinda need to query the Issue before deciding if the user can see it. yucky
-            IssueReportsQuery viewQuery = new IssueReportsQuery();
-            issueReport = viewQuery.getIssueReport(id);
+            try (IssueReportsQuery viewQuery = new IssueReportsQuery()) {
+                issueReport = viewQuery.getIssueReport(id);
 
-            if (issueReport != null){
-                if (canViewIssue(issueReport, user)){
-                    showAssignedUser = true;
-                    allowCommentInput = true;
-                    allowCommentMarkAsSolution = (user.getUserType() == UserType.Staff); //only staff can mark comments as solutions
+                if (issueReport != null) {
+                    if (canViewIssue(issueReport, user)) {
+                        showAssignedUser = true;
+                        allowCommentInput = true;
+                        showAssignmentOption = (user.getUserType() == UserType.Staff);
+                        allowCommentMarkAsSolution = (user.getUserType() == UserType.Staff); //only staff can mark comments as solutions
 
-                    int irStatus = issueReport.getIssueStatus();
-                    int kbID = issueReport.getKnowledgeBaseArticleID();
+                        int irStatus = issueReport.getIssueStatus();
+                        int kbID = issueReport.getKnowledgeBaseArticleID();
 
-                    switch (irStatus){
-                        case 1:
-                            statusClass += "new";
-                            showAssignedUser = false;
-                            break;
-                        case 2:
-                            statusClass += "inprogress";
-                            break;
-                        case 3:
-                            statusClass += "resolved"; //db says 'completed'
-                            showAcceptanceOptions = true;
-                            allowCommentMarkAsSolution = false;
-                            showKBPromotion = (user.getUserType() == UserType.Staff && kbID == 0);
-                            break;
-                        case 4:
-                            statusClass += "completed"; //db says 'resolved'
+                        switch (irStatus) {
+                            case 1:
+                                statusClass += "new";
+                                showAssignedUser = false;
+                                break;
+                            case 2:
+                                statusClass += "inprogress";
+                                break;
+                            case 3:
+                                statusClass += "resolved"; //db says 'completed'
+                                showAcceptanceOptions = true;
+                                allowCommentMarkAsSolution = false;
+                                showKBPromotion = (user.getUserType() == UserType.Staff && kbID == 0);
+                                showAssignmentOption = false;
+                                showAssignedUser = false;
+                                break;
+                            case 4:
+                                statusClass += "completed"; //db says 'resolved'
+                                allowCommentInput = false;
+                                allowCommentMarkAsSolution = false;
+                                showKBPromotion = (user.getUserType() == UserType.Staff && kbID == 0);
+                                showAssignmentOption = false;
+                                showAssignedUser = false;
+                                break;
+                        }
+                        if (issueReport.getAssignedToID() == user.getUserIdentification()) {
+                            showAssignmentOption = false;
+                        }
+                        //System.out.println("show promotion? " + showKBPromotion + " - " + user.getUserType() + " " + kbID);
+
+                        //It is assumed that if you can view it, you can comment on it, unless it's Completed or Locked
+
+                        if (issueReport.getLocked() || issueReport.getIssueStatus() == 4) { //completed
                             allowCommentInput = false;
                             allowCommentMarkAsSolution = false;
-                            showKBPromotion = (user.getUserType() == UserType.Staff && kbID == 0);
-                            break;
+                        }
+
+                        if (issueReport.getKnowledgeBaseArticleID() > 0) {
+                            showKBSegment = true;
+                        }
+
+                        //get files
+                        issueFiles = viewQuery.getFilesForReport(id);
+
+                        try (CommentsQuery cQuery = new CommentsQuery()) {
+                            issueComments = cQuery.getReportComments(id);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        return SUCCESS;
+                    } else {
+                        return ResponseCodes.FORBIDDEN;
                     }
-                    //System.out.println("show promotion? " + showKBPromotion + " - " + user.getUserType() + " " + kbID);
-
-                    //It is assumed that if you can view it, you can comment on it, unless it's Completed or Locked
-
-                    if (issueReport.getLocked() || issueReport.getIssueStatus() == 4){ //completed
-                        allowCommentInput = false;
-                        allowCommentMarkAsSolution = false;
-                    }
-
-                    if (issueReport.getKnowledgeBaseArticleID() > 0){
-                        showKBSegment = true;
-                    }
-
-                    //get files
-                    issueFiles = viewQuery.getFilesForReport(id);
-
-                    try (CommentsQuery cQuery = new CommentsQuery()){
-                        issueComments = cQuery.getReportComments(id);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    return SUCCESS;
-                }else{
-                    return ResponseCodes.FORBIDDEN;
+                } else {
+                    return ERROR;
                 }
-            }else{
+            } catch (Exception e) {
+                e.printStackTrace();
                 return ERROR;
             }
         }else{
@@ -155,5 +168,9 @@ public class IssueAction extends BaseSessionAwareAction{
 
     public List<CommentsBean> getIssueComments() {
         return issueComments;
+    }
+
+    public boolean getShowAssignmentOption() {
+        return showAssignmentOption;
     }
 }

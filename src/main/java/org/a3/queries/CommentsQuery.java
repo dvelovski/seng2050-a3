@@ -57,8 +57,6 @@ public class CommentsQuery extends BaseAutoCloseableQuery {
         commentInsertionStatement.setInt(2, issueID);
         commentInsertionStatement.setString(3, commentText);
 
-        System.out.println("user " + userID + " is posting on " + issueID + " with text " + commentText);
-
         commentInsertionStatement.executeUpdate();
         ResultSet generatedID = commentInsertionStatement.getGeneratedKeys();
         if (generatedID.next()){
@@ -77,7 +75,8 @@ public class CommentsQuery extends BaseAutoCloseableQuery {
                 "        content, " +
                 "        postedAt " +
                 "        FROM Comments CM" +
-                "        WHERE issueID = ?";
+                "        WHERE issueID = ?" +
+                "        ORDER BY postedAt ASC";
 
 
         try (PreparedStatement commentFetchStatement = getConnection().prepareStatement(commentQuery)) {
@@ -110,14 +109,31 @@ public class CommentsQuery extends BaseAutoCloseableQuery {
         return reportComments;
     }
 
-    public IssueReportBean getComment(int commentID){
+    public CommentsBean getComment(int commentID){
+        CommentsBean comment = null;
         /* todo stub */
-        return null;
-    }
+        String commentQuery = "SELECT postedBy, " +
+                "(SELECT TOP 1 CONCAT(Users.firstName, ' ', Users.lastName) FROM Users WHERE Users.id = CM.postedBy), " +
+                "content, " +
+                "postedAt " +
+                "FROM Comments CM " +
+                "WHERE id=?";
+        try (PreparedStatement stmt = getConnection().prepareStatement(commentQuery)){
 
-    @Override
-    public void close() throws Exception {
+            stmt.setInt(1, commentID);
 
+            ResultSet cResult = stmt.executeQuery();
+            if (cResult.next()){
+                comment = new CommentsBean();
+                comment.setCommentID(commentID);
+                comment.setPostedBy(cResult.getInt(1));
+                comment.setPostedByName(cResult.getString(2));
+                comment.setContent(cResult.getString(3));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return comment;
     }
 }
 

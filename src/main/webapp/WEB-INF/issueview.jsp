@@ -38,16 +38,29 @@
                         </s:if>
                     </div>
                     <div class="group right">
-                        <s:url action="promotekb" var="promo_link">
-                            <s:param name="reportID" value="issueReport.id" />
-                        </s:url>
-
-
                         <s:if test="showKBPromotion == true">
-                            <div class="input_container_inner flex_reverse clickable" onclick="window.location='<s:property value="promo_link" />'">
-                                <button type="button">Send to Knowledge Base</button>
-                            </div>
+                            <s:form action="promotekb" method="post">
+                                <input type="hidden" name="reportID" value="<s:property value="issueReport.id"/>"/>
+                                <s:url action="promotekb" var="promo_link">
+                                    <s:param name="reportID" value="issueReport.id" />
+                                </s:url>
+                                <div class="input_container_inner flex_reverse clickable">
+                                    <input type="submit" value="Send to knowledge base">
+                                </div>
+                            </s:form>
+
                         </s:if>
+                        <s:if test="showAssignmentOption == true">
+                            <s:form action="updateissue" method="post">
+                                <input type="hidden" name="action" value="i.assign" />
+                                <input type="hidden" name="requestorID" value="<s:property value="#session.userBean.userIdentification"/>"/>
+                                <input type="hidden" name="issueID" value="<s:property value="issueReport.id"/>"/>
+                                <div class="input_container_inner flex_reverse clickable">
+                                    <input type="submit" value="Assign to me">
+                                </div>
+                            </s:form>
+                        </s:if>
+
                     </div>
                 </div>
                 <div class="divider"></div>
@@ -93,7 +106,16 @@
                             </div>
                         </s:if>
                         <s:iterator value="issueComments">
-                            <div class="article_reply_inner">
+                            <s:if test="commentID == issueReport.proposedSolution">
+                                <s:set var="reply_class">article_reply_inner proposed</s:set>
+                            </s:if>
+                            <s:elseif test="commentID == issueReport.acceptedSolution">
+                                <s:set var="reply_class">article_reply_inner accepted</s:set>
+                            </s:elseif>
+                            <s:else>
+                                <s:set var="reply_class">article_reply_inner</s:set>
+                            </s:else>
+                            <div class="<s:property value="#reply_class"/>">
                                 <a id="comment<s:property value="commentID" />"></a>
                                 <div class="article_reply_header">
                                     <span class="boldtext"><s:property escapeHtml="true" value="postedByName"/></span> <span class="small_italic"><s:property value="postedAt" default="unknown"/></span>
@@ -119,7 +141,7 @@
 
                             <s:if test="allowCommentMarkAsSolution == true">
                                 <div class="input_container_outer">
-                                    <input type="checkbox" id="cResolvesIssue" name="cResolvesIssue" />
+                                    <s:checkbox name="cResolvesIssue" fieldValue="true" value="false"/>
                                     <label for="cResolvesIssue">Mark as Resolved</label>
                                 </div>
                             </s:if>

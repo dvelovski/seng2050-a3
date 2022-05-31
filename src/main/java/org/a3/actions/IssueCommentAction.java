@@ -43,14 +43,17 @@ public class IssueCommentAction extends BaseSessionAwareAction{
                     innerValidation = false;
                 }
                 if (innerValidation){
-                    //TODO submit
                     try (CommentsQuery icQuery = new CommentsQuery()){
                         newCommentID = icQuery.createComment(user.getUserIdentification(), reportBean.getId(), cCommentText);
+
+                        if (cResolvesIssue){
+                            irQuery.setIssueStatus(issueID, 3);
+                            irQuery.setIssueProposedSolution(issueID, newCommentID);
+                        }
                     } catch (Exception e) {
                         creationErrorMessage = e.getMessage();
                         innerStatus = ERROR;
                     }
-
                 }
             }else{
                 innerStatus = ERROR;

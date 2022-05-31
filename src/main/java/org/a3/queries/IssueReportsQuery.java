@@ -24,7 +24,7 @@ import org.a3.services.FileDownloadData;
 import org.a3.services.JDBCUtil;
 import org.a3.beans.IssueReportBean;
 
-public class IssueReportsQuery
+public class IssueReportsQuery extends BaseAutoCloseableQuery
 {
     //Method for grabbing data of all stored reports from database
     public static List<IssueReportBean> getAllIssueReports ()
@@ -56,45 +56,96 @@ public class IssueReportsQuery
         return reports;
     }
 
-    public List<IssueReportBean> getIssueReports(int forUser, int offset, int count){
+    public List<IssueReportBean> getIssueReports(int creatorID, int assignedTo, int offset, int count){
         /*
-            TODO stub
             the front-end only needs
              - issueID for navigation
              - user's first and last names (concatenated is easier, see getIssueReport())
-             - issueStatus as a char (refer getIssueReport())
+             - issueStatus as a varchar (refer getIssueReport())
              - issuestatus as an int
              - issueDescription
+             
+             - if creatorID is -1, it'll just be any and all of them
         */
-        return null;
+        List<IssueReportBean> results = new ArrayList<>();
+        String queryToUse = "SELECT id, " +
+                "createdBy, " +
+                "(SELECT TOP 1 CONCAT(Users.firstName, ' ', Users.lastName) FROM Users WHERE Users.id = IR.createdBy)," +
+                "title," +
+                "issueDescription," +
+                "issueStatus," +
+                "(SELECT statusName FROM Status WHERE Status.id = IR.issueStatus)," +
+                "category, " +
+                "(SELECT Category.categoryName FROM Category WHERE category.id IN (\n" +
+                "    SELECT subCategoryOf FROM SubCategory WHERE SubCategory.id = IR.category\n" +
+                "))," +
+                "(SELECT SubCategory.categoryName FROM SubCategory WHERE SubCategory.id = IR.category) " +
+                "FROM IssueReports IR " +
+                (creatorID != -1 ? "WHERE IR.createdBy = ?" : "WHERE IR.assignedTo = ?") + " AND issueStatus < 4 " +
+                "ORDER BY reportedAt DESC " +
+                "OFFSET " + offset + " ROWS FETCH NEXT " + count + " ROWS ONLY";
+
+        int uidParameter = 0;
+
+        if (creatorID == -1){
+            if (assignedTo > -1){
+                uidParameter = assignedTo;
+            }
+        }else{
+            uidParameter = creatorID;
+        }
+
+        try (PreparedStatement conn = getConnection().prepareStatement(queryToUse)){
+            conn.setInt(1, uidParameter);
+            ResultSet issueResults = conn.executeQuery();
+            while (issueResults.next()){
+                IssueReportBean irBean = new IssueReportBean();
+                irBean.setId(issueResults.getInt(1));
+                irBean.setCreatorID(issueResults.getInt(2));
+                irBean.setCreatedBy(issueResults.getString(3));
+                irBean.setTitle(issueResults.getString(4));
+                irBean.setIssueDescription(issueResults.getString(5));
+                irBean.setIssueStatus(issueResults.getInt(6));
+                irBean.setIssueStatusString(issueResults.getString(7));
+                irBean.setCategoryID(issueResults.getInt(8));
+                irBean.setCategory(issueResults.getString(9));
+                irBean.setSubCategory(issueResults.getString(10));
+
+                results.add(irBean);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return results;
     }
     public IssueReportBean getIssueReport(int issueID){
-        //TODO stub
         IssueReportBean report = null;
-        try (Connection conn = JDBCUtil.get().createConnection()) {
-            String fetchQuery = "SELECT id,\n" +
-                    "       createdBy,\n" +
-                    "       (SELECT TOP 1 CONCAT(Users.firstName, ' ', Users.lastName) FROM Users WHERE Users.id = IR.createdBy),\n" +
-                    "       title,\n" +
-                    "       issueDescription,\n" +
-                    "       issueStatus,\n" +
-                    "       (SELECT statusName FROM Status WHERE Status.id = IR.issueStatus),\n" +
-                    "       reportedAt,\n" +
-                    "       resolvedAt,\n" +
-                    "       locked,\n" +
-                    "       proposedSolution,\n" +
-                    "       acceptedSolution,\n" +
-                    "       knowledgeBaseArticleID,\n" +
-                    "       category,\n" +
-                    "       (SELECT Category.categoryName FROM Category WHERE category.id IN (\n" +
-                    "            SELECT subCategoryOf FROM SubCategory WHERE SubCategory.id = IR.category\n" +
-                    "       )),\n" +
-                    "       (SELECT SubCategory.categoryName FROM SubCategory WHERE SubCategory.id = IR.category),\n" +
-                    "       (SELECT TOP 1 CONCAT(Users.firstName, ' ', Users.lastName) FROM Users WHERE Users.id = IR.assignedTo),\n" +
-                    "       assignedTo\n" +
-                    "FROM IssueReports IR\n" +
-                    "WHERE id = ?;";
-            PreparedStatement fetchStmt = conn.prepareStatement(fetchQuery);
+
+        String fetchQuery = "SELECT id,\n" +
+                "       createdBy,\n" +
+                "       (SELECT TOP 1 CONCAT(Users.firstName, ' ', Users.lastName) FROM Users WHERE Users.id = IR.createdBy),\n" +
+                "       title,\n" +
+                "       issueDescription,\n" +
+                "       issueStatus,\n" +
+                "       (SELECT statusName FROM Status WHERE Status.id = IR.issueStatus),\n" +
+                "       reportedAt,\n" +
+                "       resolvedAt,\n" +
+                "       locked,\n" +
+                "       proposedSolution,\n" +
+                "       acceptedSolution,\n" +
+                "       knowledgeBaseArticleID,\n" +
+                "       category,\n" +
+                "       (SELECT Category.categoryName FROM Category WHERE category.id IN (\n" +
+                "            SELECT subCategoryOf FROM SubCategory WHERE SubCategory.id = IR.category\n" +
+                "       )),\n" +
+                "       (SELECT SubCategory.categoryName FROM SubCategory WHERE SubCategory.id = IR.category),\n" +
+                "       (SELECT TOP 1 CONCAT(Users.firstName, ' ', Users.lastName) FROM Users WHERE Users.id = IR.assignedTo),\n" +
+                "       assignedTo\n" +
+                "FROM IssueReports IR\n" +
+                "WHERE id = ?;";
+        try (PreparedStatement fetchStmt = getConnection().prepareStatement(fetchQuery)){
             fetchStmt.setInt(1, issueID);
 
             ResultSet result = fetchStmt.executeQuery();
@@ -134,14 +185,14 @@ public class IssueReportsQuery
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return report;
     }
     public int createIssueReport(String iTitle, String iDesc, int iCategory, int iAuthor, List<File> files, List<String> fileNames, List<String> fileMimes){
         int issueResultID = -1;
 
-        try (Connection conn = JDBCUtil.get().createConnection()){
-            String creationQuery = "INSERT INTO IssueReports (createdBy, title, issueDescription, category, reportedAt, issueStatus) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 1)";
-            PreparedStatement insertStmt = conn.prepareStatement(creationQuery, SQLServerStatement.RETURN_GENERATED_KEYS);
+        String creationQuery = "INSERT INTO IssueReports (createdBy, title, issueDescription, category, reportedAt, issueStatus) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 1)";
+        try (PreparedStatement insertStmt = getConnection().prepareStatement(creationQuery, SQLServerStatement.RETURN_GENERATED_KEYS)){
             insertStmt.setInt(1, iAuthor);
             insertStmt.setString(2, iTitle);
             insertStmt.setString(3, iDesc);
@@ -159,7 +210,7 @@ public class IssueReportsQuery
             //insert the files if they are PRESENT lol
             if (files != null && !files.isEmpty()){
                 String fileUploadQuery = "INSERT INTO UploadedFiles (issueID, uploadedBy, mime, fileName, fileData, fileSize) VALUES (?, ?, ?, ?, ?, ?)";
-                PreparedStatement ulStmt = conn.prepareStatement(fileUploadQuery);
+                PreparedStatement ulStmt = getConnection().prepareStatement(fileUploadQuery);
 
                 for (int f = 0, fSize = files.size(); f < fSize; f++){
                     ulStmt.setInt(1, issueResultID);
@@ -183,12 +234,66 @@ public class IssueReportsQuery
 
                 ulStmt.close();
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return issueResultID;
+    }
+
+    public boolean setIssueStatus(int issueID, int newStatus){
+        boolean iResult = false;
+
+        String updateQuery = "UPDATE IssueReports SET issueStatus = ? WHERE id = ?";
+        try (PreparedStatement updateStatement = getConnection().prepareStatement(updateQuery)){
+            updateStatement.setInt(1, newStatus);
+            updateStatement.setInt(2, issueID);
+
+            if (updateStatement.execute()){
+                iResult = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return iResult;
+    }
+    public boolean setIssueAssignedStaffMember(int issueID, int staffMember){
+        boolean iResult = false;
+
+        String updateQuery = "UPDATE IssueReports SET assignedTo = ? WHERE id = ?";
+        try (PreparedStatement updateStatement = getConnection().prepareStatement(updateQuery)){
+            updateStatement.setInt(1, staffMember);
+            updateStatement.setInt(2, issueID);
+
+            if (updateStatement.execute()){
+                iResult = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return iResult;
+    }
+
+    public boolean setIssueProposedSolution(int issueID, int commentID){
+        boolean iResult = false;
+
+        String updateQuery = "UPDATE IssueReports SET proposedSolution = ? WHERE id = ?";
+        try (PreparedStatement updateStatement = getConnection().prepareStatement(updateQuery)){
+            updateStatement.setInt(1, commentID);
+            updateStatement.setInt(2, issueID);
+
+            if (updateStatement.execute()){
+                iResult = true;
+            }
+
+            System.out.println("issueID " + issueID + " with proposed solution " + commentID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return iResult;
     }
 
     public FileDownloadData getFileStream(int fileID){

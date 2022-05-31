@@ -424,6 +424,10 @@ textarea.eight_lines{
 .index_entry:hover{
     background-color: #e3f2fd;
 }
+.index_entry .titlebar{
+    display: flex;
+    justify-content: space-between;
+}
 .index_entry .titlebar .title_text{
     font-weight: bold;
 }
@@ -440,7 +444,7 @@ textarea.eight_lines{
     padding: 0 0.5em;
 }
 .issue_status_text.new{
-    background: #2962ff;
+    background: #90caf9;
 }
 .issue_status_text.inprogress{
     background: #00796b;
@@ -511,6 +515,9 @@ textarea.eight_lines{
 }
 .article_reply_inner{
     padding: 0.3em 0.5em;
+}
+.article_reply_inner.proposed{
+    background-color: #e3f2fd;
 }
 .article_reply_inner.accepted{
     background-color: #c8e6c9;

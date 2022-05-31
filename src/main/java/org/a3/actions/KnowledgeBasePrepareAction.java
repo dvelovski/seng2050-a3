@@ -4,6 +4,7 @@ import org.a3.beans.IssueReportBean;
 import org.a3.beans.UploadedFileBean;
 import org.a3.beans.UserBean;
 import org.a3.beans.UserType;
+import org.a3.queries.CommentsQuery;
 import org.a3.queries.IssueReportsQuery;
 import org.a3.services.SessionManager;
 import org.a3.services.constants.ResponseCodes;
@@ -18,6 +19,7 @@ public class KnowledgeBasePrepareAction extends BaseSessionAwareAction{
 
     private IssueReportBean issueReport;
     private List<UploadedFileBean> issueFiles;
+    private String acceptedSolutionText = "";
 
     private String creationErrorMessage = ""; //
     private boolean displayForm = true;
@@ -29,6 +31,7 @@ public class KnowledgeBasePrepareAction extends BaseSessionAwareAction{
             UserBean user = sm.getUserBean(userSessionObject);
             if (user.getUserType() == UserType.Staff){
                 IssueReportsQuery irQuery = new IssueReportsQuery();
+
                 issueReport = irQuery.getIssueReport(reportID);
 
                 String innerStatus = SUCCESS;
@@ -40,6 +43,19 @@ public class KnowledgeBasePrepareAction extends BaseSessionAwareAction{
                             statusClass += "resolved"; //db says 'completed'
                         }else if (issueReport.getIssueStatus() == 4){
                             statusClass += "completed"; //db says 'resolved'
+                        }
+
+                        try (CommentsQuery cmQuery = new CommentsQuery()){
+                            System.out.println(issueReport.getAcceptedSolution() + " and " + issueReport.getProposedSolution());
+                            int commentToUse;
+                            if ((commentToUse = issueReport.getAcceptedSolution()) == 0){
+                                commentToUse = issueReport.getProposedSolution();
+                            }
+                            System.out.println(commentToUse);
+                            acceptedSolutionText = cmQuery.getComment(commentToUse).getContent();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            acceptedSolutionText = "Error - could not load the solution text. Please try again or add yourself.";
                         }
                     }else{
                         innerStatus = ERROR;
@@ -102,5 +118,13 @@ public class KnowledgeBasePrepareAction extends BaseSessionAwareAction{
 
     public String getStatusClass() {
         return statusClass;
+    }
+
+    public String getAcceptedSolutionText() {
+        return acceptedSolutionText;
+    }
+
+    public void setAcceptedSolutionText(String acceptedSolutionText) {
+        this.acceptedSolutionText = acceptedSolutionText;
     }
 }

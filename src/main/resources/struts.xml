@@ -52,7 +52,7 @@
             <result name="forbidden" type="chain">403</result>
             <result name="unauthorized" type="chain">401</result>
         </action>
-        <action name="issuecomment" class="org.a3.actions.IssueCommentAction">
+        <action name="issuecomment" class="org.a3.actions.IssueCommentAction" method="execute">
             <result name="success" type="redirectAction">
                 <param name="actionName">viewissue</param>
                 <param name="id">${issueID}</param>
@@ -63,6 +63,18 @@
                 <param name="id">${issueID}</param>
                 <param name="commentErrorMessage">${creationErrorMessage}</param>
             </result>
+            <result name="unauthorized" type="chain">401</result>
+        </action>
+        <action name="updateissue" class="org.a3.actions.IssueStatusUpdateAction" method="execute">
+            <result name="success" type="redirectAction">
+                <param name="actionName">viewissue</param>
+                <param name="id">${issueID}</param>
+            </result>
+            <result name="error" type="redirectAction">
+                <param name="actionName">viewissue</param>
+                <param name="id">${issueID}</param>
+            </result>
+            <result name="forbidden" type="chain">403</result>
             <result name="unauthorized" type="chain">401</result>
         </action>
 

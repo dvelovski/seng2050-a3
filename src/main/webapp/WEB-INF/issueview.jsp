@@ -123,6 +123,17 @@
                                 <div class="article_reply_comment">
                                     <s:property escapeHtml="true" value="content" />
                                 </div>
+                                <s:if test="showAcceptanceOptions && commentID == issueReport.proposedSolution">
+                                    <s:form action="updateissue" method="post" name="acceptance_form">
+                                        <div class="solution_acceptance_options">
+                                            <div class="solution_button accept" title="This resolves my issue" onclick="updateFormAndSubmit('acceptance_form', 's.accept')">Accept</div>
+                                            <div class="solution_button reject" title="This did not resolve my issue" onclick="updateFormAndSubmit('acceptance_form', 's.reject')">Reject</div>
+                                        </div>
+                                        <input type="hidden" name="action" value="">
+                                        <input type="hidden" name="issueID" value="<s:property value="issueReport.id" />">
+                                        <input type="hidden" name="commentID" value="<s:property value="commentID" />">
+                                    </s:form>
+                                </s:if>
                             </div>
                         </s:iterator>
                     </div>

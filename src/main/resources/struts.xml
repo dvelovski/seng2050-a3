@@ -77,6 +77,11 @@
             <result name="forbidden" type="chain">403</result>
             <result name="unauthorized" type="chain">401</result>
         </action>
+        <action name="issuecat" class="org.a3.actions.IssueCatalogAction" method="execute">
+            <result name="success">/WEB-INF/issuecatalog.jsp</result>
+            <result name="forbidden" type="chain">403</result>
+            <result name="unauthorized" type="chain">401</result>
+        </action>
 
         <action name="promotekb" class="org.a3.actions.KnowledgeBasePrepareAction" method="execute">
             <result name="success">/WEB-INF/promotekb.jsp</result>
@@ -84,10 +89,11 @@
             <result name="unauthorized" type="chain">401</result>
             <result name="error">/WEB-INF/promotekb.jsp</result>
         </action>
-        <action name="submitkb" class="org.a3.actions.KnowledgeBasePrepareAction" method="execute">
-            <result name="success">/WEB-INF/promotekb.jsp</result>
+        <action name="submitkb" class="org.a3.actions.KnowledgeBasePublishAction" method="execute">
+            <result name="success">/WEB-INF/kbview.jsp</result>
             <result name="forbidden" type="chain">403</result>
             <result name="unauthorized" type="chain">401</result>
+            <result name="error">/WEB-INF/promotekb.jsp</result>
         </action>
 
         <action name="userview" class="org.a3.actions.ProfileAction" method="execute">

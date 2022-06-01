@@ -1,7 +1,8 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <div class="body_box body_widget link_buttons transparent">
     <s:if test="#session.userBean.userType.toString == 'Staff'">
-        <div class="input_container_inner flex_reverse clickable">
+        <s:url action="issuecat" var="cat_link"/>
+        <div class="input_container_inner flex_reverse clickable" onclick="window.location='<s:property value="cat_link" />'">
             <button type="button">Open issues</button>
             <div class="input_container icon unselectable left_side green">&#x1F50E;&#xFE0E;</div>
         </div>

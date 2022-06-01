@@ -18,7 +18,7 @@
                 </div>
                 <div class="index_table">
                     <div class="outer_element utility headerbar">
-                        Displaying items <span class="boldtext"><s:property value="resultStart" />-<s:property value="resultsOnPage" /></span>
+                        Displaying items <span class="boldtext"><s:property value="resultStart" />-<s:property value="resultsOnPage" /> of <span class="boldtext"><s:property value="resultCount" /></span></span>
                     </div>
                     <div class="outer_element contents">
                         <s:iterator value="issueReports">
@@ -45,13 +45,27 @@
                                     <span class="title_text"><s:property value="title" /></span>
                                     <span class="${status_class}"><s:property value="issueStatusString" /></span>
                                 </div>
+                                <div class="subtitle">
+                                    <span class="boldtext"><s:property value="category" /></span> &#x3e; <span class="boldtext"><s:property value="subCategory" /></span>
+                                </div>
                                 <div class="truncated_text">
                                     <s:property escapeHtml="true" value="issueDescription" />
                                 </div>
                             </div>
                         </s:iterator>
                     </div>
-                    <div class="outer_element utility pagination">Pagination toolbar</div>
+                    <div class="outer_element utility pagination">
+                        <s:form action="home" method="post" name="pagination_form">
+                            <div class="pagination_buttons">
+                                <div class="pagination_button" title="Back to page 1" onclick="updateFormAndSubmit('pagination_form', 'p.first')"><<</div> <!-- page #0 -->
+                                <div class="pagination_button" title="Back 1 page" onclick="updateFormAndSubmit('pagination_form', 'p.prev')"><</div>
+                                <div class="pagination_button" title="Forward one page" onclick="updateFormAndSubmit('pagination_form', 'p.next')">></div>
+                                <div class="pagination_button" title="Go to last page" onclick="updateFormAndSubmit('pagination_form', 'p.last')">>></div>
+                            </div>
+                            <input type="hidden" name="action" value="">
+                            <input type="hidden" name="pageNumber" value="<s:property value="pageNumber" />">
+                        </s:form>
+                    </div>
                 </div>
             </div>
             <s:if test="showStatistics == true">

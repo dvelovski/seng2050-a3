@@ -46,12 +46,12 @@ public class KnowledgeBasePrepareAction extends BaseSessionAwareAction{
                         }
 
                         try (CommentsQuery cmQuery = new CommentsQuery()){
-                            System.out.println(issueReport.getAcceptedSolution() + " and " + issueReport.getProposedSolution());
+                            //System.out.println(issueReport.getAcceptedSolution() + " and " + issueReport.getProposedSolution());
                             int commentToUse;
                             if ((commentToUse = issueReport.getAcceptedSolution()) == 0){
                                 commentToUse = issueReport.getProposedSolution();
                             }
-                            System.out.println(commentToUse);
+                            //System.out.println(commentToUse);
                             acceptedSolutionText = cmQuery.getComment(commentToUse).getContent();
                         } catch (Exception e) {
                             e.printStackTrace();

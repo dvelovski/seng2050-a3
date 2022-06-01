@@ -3,6 +3,7 @@ package org.a3.actions;
 import org.a3.beans.IssueReportBean;
 import org.a3.beans.StatisticsCategoryBean;
 import org.a3.beans.UserBean;
+import org.a3.beans.UserType;
 import org.a3.queries.IssueReportsQuery;
 import org.a3.queries.StatisticsQuery;
 import org.a3.services.SessionManager;
@@ -20,10 +21,16 @@ public class UserHomeAction extends BaseSessionAwareAction{
     private List<StatisticsCategoryBean> issueCategories;
     private String stressRate;
 
-    private int pageNumber = 1;
+    private int pageNumber = 0;
     private int resultsPerPage = 10;
     private int resultsOnPage;
     private int resultStart;
+    private int resultCount;
+
+    private int nextPage;
+    private int prevPage;
+
+    private String action = "";
 
     @Override
     public String doExecute() {
@@ -44,28 +51,57 @@ public class UserHomeAction extends BaseSessionAwareAction{
                     } catch (SQLException e) {
                         statisticsError = e.getMessage();
                     }
-                    //issueReports = IssueReportsQuery.getAllIssueReports();
-                    try (IssueReportsQuery iQuery = new IssueReportsQuery()){
-                        issueReports = iQuery.getIssueReports(-1, uBean.getUserIdentification(), resultsPerPage * (pageNumber - 1), resultsPerPage);
-                        resultsOnPage = Math.min(issueReports.size(), resultsPerPage);
-                        resultStart = (resultsPerPage * (pageNumber - 1)) + 1;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
                     break;
                 default:
                     homepageHeading = "My Issues";
                     showStatistics = false;
-
-                    try (IssueReportsQuery iQuery = new IssueReportsQuery()){
-                        issueReports = iQuery.getIssueReports(uBean.getUserIdentification(), -1, resultsPerPage * (pageNumber - 1), resultsPerPage);
-                        resultsOnPage = Math.min(issueReports.size(), resultsPerPage);
-                        resultStart = (resultsPerPage * (pageNumber - 1)) + 1;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                     break;
+            }
+
+            int creatorID = (uBean.getUserType() == UserType.User ? uBean.getUserIdentification() : -1);
+            int assignedID = (uBean.getUserType() == UserType.Staff ? uBean.getUserIdentification() : -1);
+
+            try (IssueReportsQuery iQuery = new IssueReportsQuery()){
+                //get the count first
+                resultCount = iQuery.getIssueReportCount(creatorID, assignedID, true);
+                int maxPages = Math.floorDiv(resultCount, resultsPerPage);
+
+                switch (action){
+                    case "p.first":
+                        pageNumber = 0;
+                        break;
+                    case "p.prev":
+                        pageNumber -= 1;
+                        break;
+                    case "p.next":
+                        pageNumber += 1;
+                        break;
+                    case "p.last":
+                        pageNumber = maxPages;
+                        break;
+                }
+
+                pageNumber = Math.min(Math.max(0, pageNumber), maxPages);
+
+                prevPage = Math.max(pageNumber - 1, 0);
+                nextPage = Math.min(pageNumber + 1, maxPages);
+
+                /*System.out.println("page number: " + pageNumber);
+                System.out.println("maximum pages for " + resultCount + " is " + maxPages);
+                System.out.println("prev page: " + prevPage);
+                System.out.println("next page: " + nextPage);*/
+
+                issueReports = iQuery.getIssueReports(
+                        creatorID,
+                        assignedID,
+                        resultsPerPage * pageNumber,
+                        resultsPerPage,
+                        true
+                );
+                resultsOnPage = Math.min(issueReports.size(), resultsPerPage) + (pageNumber * resultsPerPage);
+                resultStart = (resultsPerPage * pageNumber) + 1;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             return SUCCESS;
         }else{
@@ -126,5 +162,29 @@ public class UserHomeAction extends BaseSessionAwareAction{
 
     public void setResultStart(int resultStart) {
         this.resultStart = resultStart;
+    }
+
+    public int getResultCount() {
+        return resultCount;
+    }
+
+    public void setResultCount(int resultCount) {
+        this.resultCount = resultCount;
+    }
+
+    public int getNextPage() {
+        return nextPage;
+    }
+
+    public int getPrevPage() {
+        return prevPage;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
     }
 }

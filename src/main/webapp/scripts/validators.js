@@ -196,3 +196,18 @@ function validateSearchForm(frm){
 
     return searchBox.value.length !== 0;
 }
+function updateFormAction(formName, action){
+    let form = document.forms[formName];
+    if (form != null){
+        if (form.elements["action"]){
+            form.elements["action"].value = action;
+            return true;
+        }
+    }
+    return false;
+}
+function updateFormAndSubmit(formName, action){
+    if (updateFormAction(formName, action)){
+        document.forms[formName].submit();
+    }
+}

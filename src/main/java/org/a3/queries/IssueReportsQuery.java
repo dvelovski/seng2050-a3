@@ -56,7 +56,41 @@ public class IssueReportsQuery extends BaseAutoCloseableQuery
         return reports;
     }
 
-    public List<IssueReportBean> getIssueReports(int creatorID, int assignedTo, int offset, int count){
+    public int getIssueReportCount(int creatorID, int assignedTo, boolean includeResolved){
+        int returnCount = 0;
+
+        String queryToUse = "SELECT COUNT(1) FROM IssueReports ";
+        queryToUse += (creatorID != -1 ? "WHERE createdBy = ?" : (assignedTo != -1 ? "WHERE assignedTo = ?" : "")) + (!includeResolved ? " AND issueStatus < 4" : "");
+
+        int uidParameter = 0;
+        boolean setUID = true;
+
+        if (creatorID == -1){
+            if (assignedTo > -1){
+                uidParameter = assignedTo;
+            }else{
+                setUID = false;
+            }
+        }else{
+            uidParameter = creatorID;
+        }
+
+        try (PreparedStatement countQuery = getConnection().prepareStatement(queryToUse)) {
+            if (setUID){
+                countQuery.setInt(1, uidParameter);
+            }
+
+            ResultSet set = countQuery.executeQuery();
+            if (set.next()){
+                returnCount = set.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return returnCount;
+    }
+
+    public List<IssueReportBean> getIssueReports(int creatorID, int assignedTo, int offset, int count, boolean showResolved){
         /*
             the front-end only needs
              - issueID for navigation
@@ -81,22 +115,28 @@ public class IssueReportsQuery extends BaseAutoCloseableQuery
                 "))," +
                 "(SELECT SubCategory.categoryName FROM SubCategory WHERE SubCategory.id = IR.category) " +
                 "FROM IssueReports IR " +
-                (creatorID != -1 ? "WHERE IR.createdBy = ?" : "WHERE IR.assignedTo = ?") + " AND issueStatus < 4 " +
+                (creatorID != -1 ? "WHERE IR.createdBy = ?" : (assignedTo != -1 ? "WHERE IR.assignedTo = ?" : "")) + (!showResolved ? " AND issueStatus < 4 " : " ") +
                 "ORDER BY reportedAt DESC " +
                 "OFFSET " + offset + " ROWS FETCH NEXT " + count + " ROWS ONLY";
 
         int uidParameter = 0;
+        boolean setUID = true;
 
         if (creatorID == -1){
             if (assignedTo > -1){
                 uidParameter = assignedTo;
+            }else{
+                setUID = false;
             }
         }else{
             uidParameter = creatorID;
         }
 
         try (PreparedStatement conn = getConnection().prepareStatement(queryToUse)){
-            conn.setInt(1, uidParameter);
+            if (setUID){
+                conn.setInt(1, uidParameter);
+            }
+
             ResultSet issueResults = conn.executeQuery();
             while (issueResults.next()){
                 IssueReportBean irBean = new IssueReportBean();
@@ -289,6 +329,26 @@ public class IssueReportsQuery extends BaseAutoCloseableQuery
             }
 
             System.out.println("issueID " + issueID + " with proposed solution " + commentID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return iResult;
+    }
+
+    public boolean setIssueAcceptedSolution(int issueID, int commentID){
+        boolean iResult = false;
+
+        String updateQuery = "UPDATE IssueReports SET acceptedSolution = ?, proposedSolution = -1, locked = 1, resolvedAt = CURRENT_TIMESTAMP WHERE id = ?";
+        try (PreparedStatement updateStatement = getConnection().prepareStatement(updateQuery)){
+            updateStatement.setInt(1, commentID);
+            updateStatement.setInt(2, issueID);
+
+            if (updateStatement.execute()){
+                iResult = true;
+            }
+
+            System.out.println("issueID " + issueID + " with accepted solution " + commentID);
         } catch (SQLException e) {
             e.printStackTrace();
         }

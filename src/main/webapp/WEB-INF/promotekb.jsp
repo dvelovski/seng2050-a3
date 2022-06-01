@@ -110,6 +110,7 @@
                         <div class="input_container icon unselectable right_side">&#10095;</div>
                     </div>
                 </div>
+                <input type="hidden" name="issueID" value="<s:property value="reportID"/>">
             </s:form>
         </s:if>
         <s:else>

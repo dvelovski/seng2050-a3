@@ -58,7 +58,7 @@ public class IssueAction extends BaseSessionAwareAction{
                                 break;
                             case 3:
                                 statusClass += "resolved"; //db says 'completed'
-                                showAcceptanceOptions = true;
+                                showAcceptanceOptions = (user.getUserIdentification() == issueReport.getCreatorID());
                                 allowCommentMarkAsSolution = false;
                                 showKBPromotion = (user.getUserType() == UserType.Staff && kbID == 0);
                                 showAssignmentOption = false;

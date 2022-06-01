@@ -11,6 +11,7 @@ public class IssueStatusUpdateAction extends BaseSessionAwareAction{
     private String action;
     private int issueID;
     private int requestorID;
+    private int commentID;
 
     private String actionError;
 
@@ -47,6 +48,10 @@ public class IssueStatusUpdateAction extends BaseSessionAwareAction{
                         case "s.reject":
                             if (user.getUserIdentification() == iBean.getCreatorID()) {
                                 irQuery.setIssueStatus(issueID, 2);
+                                irQuery.setIssueProposedSolution(issueID, -1);
+                                if (iBean.getKnowledgeBaseArticleID() != 0){
+                                    System.out.println("article needs to be deleted from the knowledge base");
+                                }
                             } else {
                                 response = ERROR;
                                 actionError = "Only the creator of the issue may perform this action.";
@@ -55,6 +60,7 @@ public class IssueStatusUpdateAction extends BaseSessionAwareAction{
                         case "s.accept":
                             if (user.getUserIdentification() == iBean.getCreatorID()) {
                                 irQuery.setIssueStatus(issueID, 4);
+                                irQuery.setIssueAcceptedSolution(issueID, commentID); //resolves it and locks it
                             } else {
                                 response = ERROR;
                                 actionError = "Only the creator of the issue may perform this action.";
@@ -68,7 +74,7 @@ public class IssueStatusUpdateAction extends BaseSessionAwareAction{
                 } else {
                     response = ERROR;
                 }
-
+                System.out.println("error - " + actionError + " for action " + action);
                 return response;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -109,5 +115,13 @@ public class IssueStatusUpdateAction extends BaseSessionAwareAction{
 
     public void setActionError(String actionError) {
         this.actionError = actionError;
+    }
+
+    public int getCommentID() {
+        return commentID;
+    }
+
+    public void setCommentID(int commentID) {
+        this.commentID = commentID;
     }
 }

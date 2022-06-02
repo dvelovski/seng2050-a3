@@ -2,21 +2,25 @@ package org.a3.beans;
 
 import java.io.Serializable;
 
-public class KnowledgeBase implements Serializable {
+public class KnowledgeBaseBean implements Serializable {
 	private int articleId;
 	private String articleName;
 	private String articleText;
 	private String initialIssue;
 	private String solutionText;
 	private String resolutionTime;
+	private String reportedTime;
+	private int category;
 
-	public KnowledgeBase() {
+	public KnowledgeBaseBean() {
 		this.articleId = 0;
 		this.articleName = null;
 		this.articleText = null;
 		this.initialIssue = null;
 		this.solutionText = null;
 		this.resolutionTime = null;
+		this.reportedTime = null;
+		this.category = 0;
     }
 	
 	public void setArticleId (int newArticleId) {
@@ -42,6 +46,8 @@ public class KnowledgeBase implements Serializable {
 	public void setResolutionTime (String newResolutionTime) {
 		this.resolutionTime = newResolutionTime;
 	}
+	public void setReportedTime (String newReportedTime) { this.reportedTime = newReportedTime; }
+	public void setCategory (int newCategory) { this.category = newCategory; }
 
 	public int getArticleId () {
 		return this.articleId;
@@ -66,4 +72,6 @@ public class KnowledgeBase implements Serializable {
 	public String getResolutionTime () {
 		return this.resolutionTime;
 	}
+	public String getReportedTime () { return  this.reportedTime; }
+	public int getCategory () { return  this.category; }
 }

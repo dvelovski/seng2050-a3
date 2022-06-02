@@ -4,6 +4,7 @@ import org.a3.beans.IssueReportBean;
 import org.a3.beans.UserBean;
 import org.a3.beans.UserType;
 import org.a3.queries.IssueReportsQuery;
+import org.a3.queries.KnowledgeBaseQuery;
 import org.a3.services.SessionManager;
 import org.a3.services.constants.ResponseCodes;
 
@@ -50,7 +51,9 @@ public class IssueStatusUpdateAction extends BaseSessionAwareAction{
                                 irQuery.setIssueStatus(issueID, 2);
                                 irQuery.setIssueProposedSolution(issueID, -1);
                                 if (iBean.getKnowledgeBaseArticleID() != 0){
-                                    System.out.println("article needs to be deleted from the knowledge base");
+                                    KnowledgeBaseQuery article = new KnowledgeBaseQuery();
+                                    article.deleteKBArticle(iBean.getKnowledgeBaseArticleID());
+                                    System.out.println("article has now been deleted from the knowledge base");
                                 }
                             } else {
                                 response = ERROR;

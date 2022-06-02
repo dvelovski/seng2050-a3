@@ -1,6 +1,6 @@
 package org.a3.actions;
 
-import org.a3.beans.KnowledgeBase;
+import org.a3.beans.KnowledgeBaseBean;
 import org.a3.services.SessionManager;
 import org.a3.services.constants.ResponseCodes;
 
@@ -12,7 +12,7 @@ public class SearchAction extends BaseSessionAwareAction {
     private String filterCategory = "";
     private int fCatInt = 0;
 
-    private List<KnowledgeBase> results;
+    private List<KnowledgeBaseBean> results;
     public String doExecute() {
         return null;
     }
@@ -41,7 +41,7 @@ public class SearchAction extends BaseSessionAwareAction {
         this.searchQuery = searchQuery;
     }
 
-    public List<KnowledgeBase> getResults(){
+    public List<KnowledgeBaseBean> getResults(){
         return results;
     }
 

@@ -1,9 +1,9 @@
 package org.a3.actions;
 
-import org.a3.beans.KnowledgeBase;
+import org.a3.beans.KnowledgeBaseBean;
 
 public class KnowledgeBaseViewAction extends BaseSessionAwareAction{
-    private KnowledgeBase articleBean;
+    private KnowledgeBaseBean articleBean;
     private int articleID;
 
     @Override
@@ -19,11 +19,11 @@ public class KnowledgeBaseViewAction extends BaseSessionAwareAction{
         this.articleID = articleID;
     }
 
-    public KnowledgeBase getArticleBean() {
+    public KnowledgeBaseBean getArticleBean() {
         return articleBean;
     }
 
-    public void setArticleBean(KnowledgeBase articleBean) {
+    public void setArticleBean(KnowledgeBaseBean articleBean) {
         this.articleBean = articleBean;
     }
 }

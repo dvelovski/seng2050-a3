@@ -31,11 +31,6 @@
                             <span>Filed under: </span>
                             <span class="boldtext"><s:property value="issueReport.category" /></span> &#x3e; <span class="boldtext"><s:property value="issueReport.subCategory" /></span>
                         </div>
-                        <s:if test="showKBSegment == true">
-                            <div class="in_article_kb_hero">
-                                This issue has been added to the Knowledge Base
-                            </div>
-                        </s:if>
                     </div>
                     <div class="group right">
                         <s:if test="showKBPromotion == true">
@@ -60,9 +55,16 @@
                                 </div>
                             </s:form>
                         </s:if>
-
                     </div>
                 </div>
+                <s:if test="showKBSegment == true">
+                    <div class="in_article_kb_hero">
+                        <s:url action="knowledgebase" var="kb_hero_link">
+                            <s:param name="articleID" value="issueReport.knowledgeBaseArticleId" />
+                        </s:url>
+                        This issue has been added to the <a href="${kb_hero_link}">Knowledge Base</a>.
+                    </div>
+                </s:if>
                 <div class="divider"></div>
                 <div class="article bar contents">
                     <span class="boldtext">Issue description:</span>

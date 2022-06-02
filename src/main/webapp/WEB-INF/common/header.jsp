@@ -27,9 +27,9 @@
         </div>
         <s:if test="#session.loggedIn != 0">
             <div class="hgroup search">
-                <s:form action="search" class="header_item" method="GET" onsubmit="return validateSearchForm(this)">
-                    <input type="search" name="searchQuery" id="header_search" class="tb_general form_input search" placeholder="Search...">
-                    <input type="submit" class="form_button search no_left_border" value="&#x1F50E;&#xFE0E;">
+                <s:form action="search" class="header_item" method="post" onsubmit="return validateSearchForm(this)">
+                    <input type="search" name="searchQuery" id="header_search" class="tb_general form_input search" placeholder="Search..." value="<s:property value="searchQuery" />">
+                    <input type="submit" class="form_button search nlb" value="&#x1F50E;&#xFE0E;">
                     <label for="header_search"></label>
                 </s:form>
             </div>

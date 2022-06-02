@@ -21,7 +21,7 @@
 
         <action name="search" class="org.a3.actions.SearchAction" method="populate">
             <result name="success">/WEB-INF/search.jsp</result>
-            <result name="no_login">/WEB-INF/login.jsp</result>
+            <result name="unauthorized" type="chain">401</result>
         </action>
         <!-- reportIssue returns the 'create issue' page -->
 
@@ -125,8 +125,9 @@
             <result name="success">/WEB-INF/createuser.jsp</result> <!-- keep this, it's needed to load the page initially -->
         </action>
 
-        <action name="knowledgebaseindex">
-
+        <action name="knowledgebaseindex" class="org.a3.actions.KnowledgeBaseIndexAction" method="execute">
+            <result name="success">/WEB-INF/kbcatalog.jsp</result>
+            <result name="unauthorized" type="chain">401</result>
         </action>
         <action name="knowledgebase" class="org.a3.actions.KnowledgeBaseViewAction" method="execute">
             <result name="success">/WEB-INF/kbview.jsp</result>

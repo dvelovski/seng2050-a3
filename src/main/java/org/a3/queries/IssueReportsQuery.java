@@ -1,11 +1,4 @@
-package org.a3.queries; /*
- * @version (1.0)
- * @date (2022-05-20)
- * @course (SENG2050)
- * @assignment (3.2)
- * @group (Dimitar Velovski, Stephen Watson, Dane Cowburn, Lindsey Neilson)
- * @description: database query class for existing issue reports.
- */
+package org.a3.queries;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -379,8 +372,6 @@ public class IssueReportsQuery extends BaseAutoCloseableQuery
             if (updateStatement.execute()){
                 iResult = true;
             }
-
-            System.out.println("issueID " + issueID + " with accepted solution " + commentID);
         } catch (SQLException e) {
             e.printStackTrace();
         }

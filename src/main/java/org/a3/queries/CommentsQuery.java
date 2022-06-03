@@ -1,16 +1,5 @@
 package org.a3.queries;
 
-/*
- * @author (Dane Cowburn)
- * @version (1.0)
- * @date (2022 - 05 - 20)
- * @course (SENG2050)
- * @assignment (3.2)
- * @group (Dimitar Velovski, Stephen Watson, Dane Cowburn, Lindsey Neilson)
- * @studentNumber (c3232962)
- * @description: database query helper class for comments
- */
-
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

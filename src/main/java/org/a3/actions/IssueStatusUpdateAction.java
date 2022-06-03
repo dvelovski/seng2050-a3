@@ -80,7 +80,6 @@ public class IssueStatusUpdateAction extends BaseSessionAwareAction{
                 } else {
                     response = ERROR;
                 }
-                System.out.println("error - " + actionError + " for action " + action);
                 return response;
             } catch (Exception e) {
                 e.printStackTrace();

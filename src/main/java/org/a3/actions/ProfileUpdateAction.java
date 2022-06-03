@@ -46,7 +46,7 @@ public class ProfileUpdateAction extends BaseSessionAwareAction{
                         returnCode = SUCCESS;
                     }
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+                    //System.out.println(e.getMessage());
                 }
 
                 return returnCode;

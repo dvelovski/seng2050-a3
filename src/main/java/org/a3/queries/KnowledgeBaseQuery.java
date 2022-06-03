@@ -179,7 +179,7 @@ public class KnowledgeBaseQuery extends BaseAutoCloseableQuery{
                 resultID = (int) generatedKeys.getLong(1);
             }
 
-            System.out.println(resultID);
+            //System.out.println(resultID);
         } catch (SQLException e) {
             e.printStackTrace();
         }

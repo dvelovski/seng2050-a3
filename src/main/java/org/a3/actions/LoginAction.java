@@ -30,12 +30,12 @@ public class LoginAction extends BaseSessionAwareAction {
             /* authentication flow */
             boolean proceed  = true;
             if (loginUsername.isEmpty()){
-                System.out.println("adding field error - username");
+                //System.out.println("adding field error - username");
                 addFieldError("loginUsername", "Username may not be blank.");
                 proceed = false;
             }
             if (loginPassword.isEmpty()) {
-                System.out.println("adding field error - passw");
+                //System.out.println("adding field error - passw");
                 addFieldError("loginPassword", "Password must be specified.");
                 proceed = false;
             }

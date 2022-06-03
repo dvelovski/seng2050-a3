@@ -49,7 +49,7 @@ public class IssueSubmitAction extends BaseSessionAwareAction{
                     addFieldError("newIssueTitle", "Issue title may not be blank");
                     validation = false;
                 }
-                if (catIdx <= 0 || catIdx >= 14){
+                if (catIdx <= 0 || catIdx > 14){
                     addFieldError("newIssueCategory", "Invalid category selection");
                     validation = false;
                 }
@@ -66,7 +66,7 @@ public class IssueSubmitAction extends BaseSessionAwareAction{
                     innerResponseCode = SUCCESS;
                 }
 
-                System.out.println("inner response code: " + innerResponseCode);
+                //System.out.println("inner response code: " + innerResponseCode);
                 return innerResponseCode;
             }
         }

@@ -5,7 +5,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 	
-	<display-name>SENG2050 Assignment 3 - Issue Tracker</display-name>
+	<display-name>c3281958_c3232962_c3339952_FinalProject</display-name>
 
 	<filter>
 		<filter-name>struts2</filter-name>

@@ -115,7 +115,7 @@
                     </div>
                     <s:if test="allowCommentInput == true">
                         <div class="divider"></div>
-                        <s:form action="issuecomment" class="column" method="post" onsubmit="/*return validateCommentForm(this)*/">
+                        <s:form action="issuecomment" class="column" method="post" onsubmit="return validateCommentForm(this)">
                             <div class="input_container_outer">
                                 <div><label for="iNewComment">Add a new comment:</label></div>
                                 <div class="input_container_inner">

@@ -702,3 +702,10 @@ textarea.eight_lines{
 .search_util_grid_row:last-of-type{
     margin-bottom: 1em;
 }
+
+.action_error{
+    background: #b71c1c;
+    color: white;
+    padding: 0.25em 0;
+    text-align: center;
+}

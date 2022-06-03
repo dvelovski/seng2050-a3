@@ -62,7 +62,7 @@
             <result name="error" type="redirectAction">
                 <param name="actionName">viewissue</param>
                 <param name="id">${issueID}</param>
-                <param name="commentErrorMessage">${creationErrorMessage}</param>
+                <param name="actionError">${creationErrorMessage}</param>
             </result>
             <result name="unauthorized" type="chain">401</result>
         </action>
@@ -134,7 +134,7 @@
         <action name="knowledgebaseindex" class="org.a3.actions.KnowledgeBaseIndexAction" method="execute">
             <result name="success">/WEB-INF/kbcatalog.jsp</result>
             <result name="unauthorized" type="chain">401</result>
-            <result name="search" type="redirectAction">
+            <result name="search" type="chain">
                 <param name="actionName">search</param>
                 <param name="searchQuery">${searchQuery}</param>
             </result>

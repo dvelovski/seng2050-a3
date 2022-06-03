@@ -49,3 +49,6 @@
         </s:if>
     </div>
 </header>
+<s:if test="actionError != null && actionError.length > 0">
+    <div class="action_error"><s:property value="actionError" /></div>
+</s:if>

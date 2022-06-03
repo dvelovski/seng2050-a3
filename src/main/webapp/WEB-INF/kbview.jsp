@@ -22,8 +22,11 @@
                     <div class="group left">
                         <div class="ddd"><span>Date / time of initial issue: </span><span class="boldtext"><s:property value="articleBean.reportedTime" default="unknown"/></span></div>
                         <div class="ddd"><span>Date / time of issue resolution: </span><span class="boldtext"><s:property value="articleBean.resolutionTime" default="unknown"/></span></div>
+                        <div>
+                            <span>Filed under: </span>
+                            <span class="boldtext"><s:property value="articleBean.categoryName" /></span> &#x3e; <span class="boldtext"><s:property value="articleBean.subCategoryName" /></span>
+                        </div>
                     </div>
-
                 </div>
                 <div class="divider"></div>
                 <div class="article bar contents">

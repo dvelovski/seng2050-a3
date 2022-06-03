@@ -26,6 +26,8 @@ public class IssueAction extends BaseSessionAwareAction{
     private boolean showAssignedUser;
     private boolean showAssignmentOption;
 
+    private String actionError;
+
     @Override
     public String doExecute() {
         //if 'action' is blank, we are viewing.
@@ -172,5 +174,13 @@ public class IssueAction extends BaseSessionAwareAction{
 
     public boolean getShowAssignmentOption() {
         return showAssignmentOption;
+    }
+
+    public String getActionError() {
+        return actionError;
+    }
+
+    public void setActionError(String actionError) {
+        this.actionError = actionError;
     }
 }

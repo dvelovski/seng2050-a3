@@ -50,10 +50,13 @@ public class IssueStatusUpdateAction extends BaseSessionAwareAction{
                             if (user.getUserIdentification() == iBean.getCreatorID()) {
                                 irQuery.setIssueStatus(issueID, 2);
                                 irQuery.setIssueProposedSolution(issueID, -1);
+
                                 if (iBean.getKnowledgeBaseArticleID() != 0){
-                                    KnowledgeBaseQuery article = new KnowledgeBaseQuery();
-                                    article.deleteKBArticle(iBean.getKnowledgeBaseArticleID());
-                                    System.out.println("article has now been deleted from the knowledge base");
+                                    irQuery.clearKnowledgeBaseArticleID(issueID);
+                                    try (KnowledgeBaseQuery article = new KnowledgeBaseQuery()) {
+                                        article.deleteKBArticle(iBean.getKnowledgeBaseArticleID());
+                                        //System.out.println("article has now been deleted from the knowledge base");
+                                    }
                                 }
                             } else {
                                 response = ERROR;

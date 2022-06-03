@@ -699,3 +699,6 @@ textarea.eight_lines{
 .search_util_grid_row:first-of-type{
     margin-bottom: 0.25em;
 }
+.search_util_grid_row:last-of-type{
+    margin-bottom: 1em;
+}

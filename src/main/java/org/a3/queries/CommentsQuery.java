@@ -111,7 +111,6 @@ public class CommentsQuery extends BaseAutoCloseableQuery {
 
     public CommentsBean getComment(int commentID){
         CommentsBean comment = null;
-        /* todo stub */
         String commentQuery = "SELECT postedBy, " +
                 "(SELECT TOP 1 CONCAT(Users.firstName, ' ', Users.lastName) FROM Users WHERE Users.id = CM.postedBy), " +
                 "content, " +

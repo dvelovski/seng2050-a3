@@ -2,7 +2,14 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <div>
     <div class="hgroup search">
-        <s:form action="search" method="post" class="column" onsubmit="return validateSearchForm(this)">
+        <s:set var="validateQuery">${param.validateQuery}</s:set>
+        <s:if test="#validateQuery.equals('true')">
+            <s:set var="submitJS" value="return validateSearchForm(this)" />
+        </s:if>
+        <s:else>
+            <s:set var="submitJS" value=" "/>
+        </s:else>
+        <form action="${param.searchTarget}" method="post" class="column" onsubmit="${submitJS}">
             <div class="search_util_grid_row">
                 <label for="header_search">Query</label>
                 <label for="filter_category">Category</label>
@@ -40,6 +47,6 @@
                 <script>document.getElementById('filter_category').selectedIndex = <s:property escapeJavaScript="true" value="fCatInt" default="0" />;</script>
                 <input type="submit" class="form_button search" value="&#x1F50E;&#xFE0E;">
             </div>
-        </s:form>
+        </form>
     </div>
 </div>

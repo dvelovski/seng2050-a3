@@ -1,4 +1,4 @@
-package org.a3.queries; /**
+package org.a3.queries; /*
  * @version (1.0)
  * @date (2022-05-20)
  * @course (SENG2050)
@@ -21,6 +21,8 @@ import org.a3.beans.UploadedFileBean;
 import org.a3.services.FileDownloadData;
 import org.a3.services.JDBCUtil;
 import org.a3.beans.IssueReportBean;
+
+import static java.sql.Types.NULL;
 
 public class IssueReportsQuery extends BaseAutoCloseableQuery
 {
@@ -314,19 +316,35 @@ public class IssueReportsQuery extends BaseAutoCloseableQuery
         return iResult;
     }
 
+    public boolean clearKnowledgeBaseArticleID(int issueID){
+        boolean iResult = false;
+        String updateQuery = "UPDATE IssueReports SET knowledgeBaseArticleID = NULL WHERE id = ?";
+        try (PreparedStatement removeStatement = getConnection().prepareStatement(updateQuery)){
+            removeStatement.setInt(1, issueID);
+            if (removeStatement.execute()){
+                iResult = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return iResult;
+    }
+
     public boolean setIssueProposedSolution(int issueID, int commentID){
         boolean iResult = false;
 
-        String updateQuery = "UPDATE IssueReports SET proposedSolution = ? WHERE id = ?";
+        String updateQuery = "UPDATE IssueReports SET proposedSolution = ?, resolvedAt = CURRENT_TIMESTAMP WHERE id = ?";
         try (PreparedStatement updateStatement = getConnection().prepareStatement(updateQuery)){
-            updateStatement.setInt(1, commentID);
+            if (commentID == -1){
+                updateStatement.setNull(1, NULL);
+            }else{
+                updateStatement.setInt(1, commentID);
+            }
             updateStatement.setInt(2, issueID);
 
             if (updateStatement.execute()){
                 iResult = true;
             }
-
-            System.out.println("issueID " + issueID + " with proposed solution " + commentID);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -337,7 +355,7 @@ public class IssueReportsQuery extends BaseAutoCloseableQuery
     public boolean setIssueAcceptedSolution(int issueID, int commentID){
         boolean iResult = false;
 
-        String updateQuery = "UPDATE IssueReports SET acceptedSolution = ?, proposedSolution = -1, locked = 1, resolvedAt = CURRENT_TIMESTAMP WHERE id = ?";
+        String updateQuery = "UPDATE IssueReports SET acceptedSolution = ?, proposedSolution = NULL, locked = 1, resolvedAt = CURRENT_TIMESTAMP WHERE id = ?";
         try (PreparedStatement updateStatement = getConnection().prepareStatement(updateQuery)){
             updateStatement.setInt(1, commentID);
             updateStatement.setInt(2, issueID);

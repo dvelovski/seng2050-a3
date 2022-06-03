@@ -44,6 +44,24 @@ function validateLoginForm(frm){
     return result;
 }
 
+function validateCommentForm(frm){
+    resetState();
+    let result = true;
+
+    let tbComment = frm.elements["cCommentText"];
+    trimValue(tbComment);
+
+    if (tbComment.value.length === 0){
+        fieldError(tbComment, "Comment must not be blank");
+        result = false;
+    }
+    if (tbComment.value.length >= 4096){
+        fieldError(tbComment, "Comment cannot exceed 4096 characters")
+        result = false;
+    }
+    return result;
+}
+
 function validateIssueReport(frm){
     resetState();
 

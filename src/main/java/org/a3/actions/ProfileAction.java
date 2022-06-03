@@ -33,7 +33,6 @@ public class ProfileAction extends BaseSessionAwareAction{
                     userBean = userQuery.userDetailsQuery(userID);
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    return ERROR;
                 }
 
                 if (userBean != null){

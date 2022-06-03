@@ -1,6 +1,7 @@
 package org.a3.actions;
 
 import org.a3.beans.KnowledgeBaseBean;
+import org.a3.queries.KnowledgeBaseQuery;
 import org.a3.services.SessionManager;
 import org.a3.services.constants.ResponseCodes;
 
@@ -26,7 +27,15 @@ public class SearchAction extends BaseSessionAwareAction {
                 fCatInt = 0;
             }
 
-            //TODO search and return results
+            try (KnowledgeBaseQuery kbQuery = new KnowledgeBaseQuery()){
+                if (searchQuery.isEmpty()){ //avoid errors, and avoid making the query code even more spaghetti-like
+                    results = kbQuery.getKBArticleIndex(fCatInt);
+                }else{
+                    results = kbQuery.searchKB(fCatInt, searchQuery);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             return SUCCESS;
         }

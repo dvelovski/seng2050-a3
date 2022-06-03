@@ -4,6 +4,7 @@ import org.a3.beans.IssueReportBean;
 import org.a3.beans.UserBean;
 import org.a3.beans.UserType;
 import org.a3.queries.IssueReportsQuery;
+import org.a3.queries.KnowledgeBaseQuery;
 import org.a3.services.SessionManager;
 import org.a3.services.constants.ResponseCodes;
 
@@ -20,17 +21,25 @@ public class KnowledgeBasePublishAction extends BaseSessionAwareAction{
         if (sm.isLoggedIn(userSessionObject)){
             UserBean user = sm.getUserBean(userSessionObject);
             if (user.getUserType() == UserType.Staff){
-                IssueReportBean originalReport;
+                IssueReportBean originalReport = null;
                 String innerStatus = SUCCESS;
 
                 try (IssueReportsQuery irQuery = new IssueReportsQuery()) {
                     originalReport = irQuery.getIssueReport(issueID);
 
-                    //TODO create the entry and return its ID so we can navigate
-                    //confirmed with Dane that the knowledge base insertion function will set the issue report's kb article ID
                 } catch (Exception e) {
                     e.printStackTrace();
                     innerStatus = ERROR;
+                }
+
+                if (originalReport != null){
+                    try (KnowledgeBaseQuery kbQuery = new KnowledgeBaseQuery()){
+                        articleResultID = kbQuery.createKBArticle(issueID, kbArticleName, kbArticleDesc, kbArticleResolution);
+                        innerStatus = SUCCESS;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        innerStatus = ERROR;
+                    }
                 }
 
                 return innerStatus;

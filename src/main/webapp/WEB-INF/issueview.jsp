@@ -71,33 +71,7 @@
                     <div><s:property escapeHtml="true" value="issueReport.issueDescription" /></div>
                 </div>
                 <div class="divider"></div>
-                <div class="article bar attachments">
-                    <s:if test="issueFiles.size > 0">
-                        <span class="boldtext">Attachments (<s:property value="issueFiles.size" />)</span>:
-                        <div class="inner_attachmentbar">
-                        <s:iterator value="issueFiles">
-                            <s:url action="download" var="dlLink">
-                                <s:param name="requestedFileID"><s:property value="fileID"/></s:param>
-                            </s:url>
-                            <a class="inline_attachment_item" href="${dlLink}" download="<s:property value="fileName"/>">
-                                <div class="attachment_icon">
-                                    &#128206;
-                                </div>
-                                <div class="attachment_details" title="<s:property value="fileName" />">
-                                    <s:property escapeHtml="true" value="fileName" /><br>
-                                    <s:property value="fileSizeString" />
-                                </div>
-                            </a>
-                        </s:iterator>
-                        </div>
-                    </s:if>
-                    <s:else>
-                        <span class="boldtext">Attachments:</span>
-                        <div class="inner_attachmentbar">
-                            <s:property value="issueReport.createdBy" /> did not upload any files.
-                        </div>
-                    </s:else>
-                </div>
+                <s:include value="common/fileswidget.jsp" />
                 <div class="divider"></div>
                 <div class="article bar replies">
                     <span class="boldtext">Replies (<s:property value="issueComments.size" />)</span>:
@@ -143,10 +117,9 @@
                         <div class="divider"></div>
                         <s:form action="issuecomment" class="column" method="post"> <!-- TODO validate -->
                             <div class="input_container_outer">
-                                <div>Add a new reply:</div>
+                                <div><label for="iNewComment">Add a new comment:</label></div>
                                 <div class="input_container_inner">
                                     <s:textarea class="four_lines tb_general" id="iNewComment" name="cCommentText" />
-                                    <label for="iNewComment"></label>
                                     <div class="input_container_error">
                                     </div>
                                 </div>

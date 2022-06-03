@@ -29,6 +29,7 @@
             <result name="success">/WEB-INF/issueview.jsp</result>
             <result name="forbidden" type="chain">403</result> <!-- 403 - forbidden - can't do this -->
             <result name="unauthorized" type="chain">401</result>
+            <result name="error" type="chain">404</result>
         </action>
         <action name="reportissue" class="org.a3.actions.CreateIssueAction" method="execute">
             <result name="success">/WEB-INF/createissue.jsp</result>
@@ -73,6 +74,7 @@
             <result name="error" type="redirectAction">
                 <param name="actionName">viewissue</param>
                 <param name="id">${issueID}</param>
+                <param name="actionError">${actionError}</param>
             </result>
             <result name="forbidden" type="chain">403</result>
             <result name="unauthorized" type="chain">401</result>
@@ -90,7 +92,10 @@
             <result name="error">/WEB-INF/promotekb.jsp</result>
         </action>
         <action name="submitkb" class="org.a3.actions.KnowledgeBasePublishAction" method="execute">
-            <result name="success">/WEB-INF/kbview.jsp</result>
+            <result name="success" type="redirectAction">
+                <param name="actionName">knowledgebase</param>
+                <param name="articleID">${articleResultID}</param>
+            </result>
             <result name="forbidden" type="chain">403</result>
             <result name="unauthorized" type="chain">401</result>
             <result name="error">/WEB-INF/promotekb.jsp</result>
@@ -100,6 +105,7 @@
             <result name="success">/WEB-INF/userview.jsp</result>
             <result name="forbidden" type="chain">403</result>
             <result name="unauthorized" type="chain">401</result>
+            <result name="error" type="chain">404</result>
         </action>
         <action name="userupdate" class="org.a3.actions.ProfileUpdateAction" method="execute">
             <result name="success" type="redirectAction">
@@ -128,11 +134,16 @@
         <action name="knowledgebaseindex" class="org.a3.actions.KnowledgeBaseIndexAction" method="execute">
             <result name="success">/WEB-INF/kbcatalog.jsp</result>
             <result name="unauthorized" type="chain">401</result>
+            <result name="search" type="redirectAction">
+                <param name="actionName">search</param>
+                <param name="searchQuery">${searchQuery}</param>
+            </result>
         </action>
         <action name="knowledgebase" class="org.a3.actions.KnowledgeBaseViewAction" method="execute">
             <result name="success">/WEB-INF/kbview.jsp</result>
             <result name="forbidden" type="chain">403</result>
             <result name="unauthorized" type="chain">401</result>
+            <result name="error" type="chain">404</result>
         </action>
 
         <action name="download" class="org.a3.actions.FileDownloadAction">

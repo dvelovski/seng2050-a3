@@ -14,6 +14,7 @@ public class KnowledgeBaseBean implements Serializable {
 
 	private String categoryName;
 	private String subCategoryName;
+	private String creatorName;
 
 	public KnowledgeBaseBean() {
 		this.articleId = 0;
@@ -25,6 +26,7 @@ public class KnowledgeBaseBean implements Serializable {
 		this.reportedTime = null;
 		this.category = 0;
 		this.categoryName = this.subCategoryName = null;
+		this.creatorName = null;
     }
 	
 	public void setArticleId (int newArticleId) {
@@ -93,5 +95,13 @@ public class KnowledgeBaseBean implements Serializable {
 
 	public void setSubCategoryName(String subCategoryName) {
 		this.subCategoryName = subCategoryName;
+	}
+
+	public String getCreatorName() {
+		return creatorName;
+	}
+
+	public void setCreatorName(String creatorName) {
+			this.creatorName = creatorName;
 	}
 }

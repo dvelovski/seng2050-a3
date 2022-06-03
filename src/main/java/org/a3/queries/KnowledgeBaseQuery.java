@@ -23,6 +23,7 @@ public class KnowledgeBaseQuery extends BaseAutoCloseableQuery{
                 "reportedTime, " +
                 "(SELECT Category.categoryName FROM Category WHERE Category.id IN (SELECT subCategoryOf FROM SubCategory WHERE SubCategory.id = KB.category)), " +
                 "(SELECT SubCategory.categoryName FROM SubCategory WHERE SubCategory.id = KB.category), " +
+                "(SELECT CONCAT(firstName, ' ', lastName) FROM Users WHERE id = (SELECT createdBy FROM IssueReports WHERE id = KB.initialIssue)), " +
                 "category FROM KnowledgeBase KB " +
                 "WHERE id = ?";
         KnowledgeBaseBean article = null;
@@ -52,7 +53,9 @@ public class KnowledgeBaseQuery extends BaseAutoCloseableQuery{
                 }
                 article.setCategoryName(result.getString(8));
                 article.setSubCategoryName(result.getString(9));
-                article.setCategory(result.getInt(10));
+                article.setCreatorName(result.getString(10));
+                article.setCategory(result.getInt(11));
+
             }
         } catch (SQLException e) {
             e.printStackTrace();

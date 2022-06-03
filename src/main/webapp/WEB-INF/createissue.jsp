@@ -92,12 +92,13 @@
                     </div>
                     <div class="input_container_outer">
                         <div class="input_container_desc">
-                            <label for="newIssueFiles">Supporting files</label>
+                            <label for="newIssueFiles">Supporting files (1MB maximum per file)</label>
                             <span class="description_tooltip">?</span>
                             <div class="tooltip_outer">
                                 <div class="tooltip_inner">
                                     Upload any relevant files to help us understand your issue.<br>
-                                    Examples would be screenshots of any errors, or log files.
+                                    Examples would be screenshots of any errors, or log files.<br>
+                                    Maximum size 1MB.
                                 </div>
                             </div>
                         </div>
@@ -119,15 +120,28 @@
         </div>
         <script>
             let fileUploader = document.querySelectorAll("input[type='file']")[0];
-            let fileContainer = fileUploader.parentElement.nextElementSibling;
+            let fileContainer = fileUploader.parentElement.nextElementSibling.nextElementSibling;
             fileUploader.addEventListener("change", function(){
+                resetState();
+
                 while (fileContainer.firstChild){
                     fileContainer.removeChild(fileContainer.firstChild);
                 }
                 let fileList = fileUploader.files;
+                let ulError = false;
                 for (let i = 0; i < fileList.length; i++){
-                    let fileDiv = createFileRepresentation(fileList[i]);
-                    fileContainer.appendChild(fileDiv);
+                    let fileData = fileList[i];
+                    if (fileData.size > (1024 * 1024)){
+                        ulError = true;
+                        break;
+                    }else{
+                        let fileDiv = createFileRepresentation(fileList[i]);
+                        fileContainer.appendChild(fileDiv);
+                    }
+                }
+                if (ulError){
+                    fieldError(fileUploader, "One or more of the selected files exceeds the maximum size (1MB).");
+                    fileUploader.value = null;
                 }
             });
             function createFileRepresentation(file){

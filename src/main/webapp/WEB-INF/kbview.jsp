@@ -26,6 +26,9 @@
                             <span>Filed under: </span>
                             <span class="boldtext"><s:property value="articleBean.categoryName" /></span> &#x3e; <span class="boldtext"><s:property value="articleBean.subCategoryName" /></span>
                         </div>
+                        <div>Reported by:
+                            <span class="boldtext"><s:property value="articleBean.creatorName" /></span>
+                        </div>
                     </div>
                 </div>
                 <div class="divider"></div>

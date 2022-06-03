@@ -39,7 +39,7 @@
         <action name="submitissue" class="org.a3.actions.IssueSubmitAction" method="execute">
             <!--<interceptor-ref name="fileUpload">
                 <param name="allowedTypes">*/*</param>
-                <param name="maximumSize">4194304</param>
+                <param name="maximumSize">1024</param>
             </interceptor-ref>-->
             <interceptor-ref name="store">
                 <param name="operationMode">STORE</param>
@@ -52,6 +52,10 @@
             <result name="error" type="redirectAction">reportissue</result>
             <result name="forbidden" type="chain">403</result>
             <result name="unauthorized" type="chain">401</result>
+            <result name="input" type="redirectAction">
+                <param name="actionName">reportissue</param>
+                <param name="actionError">Upload error.</param>
+            </result>
         </action>
         <action name="issuecomment" class="org.a3.actions.IssueCommentAction" method="execute">
             <result name="success" type="redirectAction">

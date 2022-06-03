@@ -17,7 +17,7 @@ public class JDBCUtil
 
     }
     public void loadConfig(ServletContext context){
-        System.out.println(context.getResourcePaths("/"));
+        //System.out.println(context.getResourcePaths("/"));
 
         try (InputStream iStream = context.getResourceAsStream("/WEB-INF/db.txt")){
             BufferedReader in = new BufferedReader(new InputStreamReader(iStream));

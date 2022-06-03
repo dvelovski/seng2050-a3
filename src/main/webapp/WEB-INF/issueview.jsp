@@ -27,6 +27,9 @@
                         <s:if test="showAssignedUser == true">
                             <div class="ddd"><span>Assigned to </span><span class="boldtext"><s:property escapeHtml="true" value="issueReport.assignedToName" default="unknown"/></span></div>
                         </s:if>
+                        <s:if test="issueReport.resolvedAt.isEmpty == false">
+                            <div class="ddd"><span>Resolved at </span><span><s:property escapeHtml="true" value="issueReport.resolvedAt" default="unknown"/></span></div>
+                        </s:if>
                         <div>
                             <span>Filed under: </span>
                             <span class="boldtext"><s:property value="issueReport.category" /></span> &#x3e; <span class="boldtext"><s:property value="issueReport.subCategory" /></span>

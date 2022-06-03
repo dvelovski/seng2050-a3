@@ -63,7 +63,7 @@ public class UserHomeAction extends BaseSessionAwareAction{
 
             try (IssueReportsQuery iQuery = new IssueReportsQuery()){
                 //get the count first
-                resultCount = iQuery.getIssueReportCount(creatorID, assignedID, true);
+                resultCount = iQuery.getIssueReportCount(creatorID, assignedID, false);
                 int maxPages = Math.floorDiv(resultCount, resultsPerPage);
 
                 switch (action){
@@ -96,10 +96,11 @@ public class UserHomeAction extends BaseSessionAwareAction{
                         assignedID,
                         resultsPerPage * pageNumber,
                         resultsPerPage,
-                        true
+                        false,
+                        false
                 );
                 resultsOnPage = Math.min(issueReports.size(), resultsPerPage) + (pageNumber * resultsPerPage);
-                resultStart = (resultsPerPage * pageNumber) + 1;
+                resultStart = (issueReports.isEmpty() ? 0 : (resultsPerPage * pageNumber) + 1);
             } catch (Exception e) {
                 e.printStackTrace();
             }

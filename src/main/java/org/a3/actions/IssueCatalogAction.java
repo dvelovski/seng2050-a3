@@ -20,11 +20,13 @@ public class IssueCatalogAction extends BaseSessionAwareAction{
     private int prevPage;
 
     private String action = "";
-    private boolean showResolved = true;
+    private boolean showResolved = false;
     private boolean assignedToMe = false;
 
     private List<IssueReportBean> issueReports;
     private String loadError = "";
+
+    private boolean catGroupByStatus = false;
 
     @Override
     public String doExecute() {
@@ -57,16 +59,19 @@ public class IssueCatalogAction extends BaseSessionAwareAction{
                     prevPage = Math.max(pageNumber - 1, 0);
                     nextPage = Math.min(pageNumber + 1, maxPages);
 
+                    //System.out.println("group by status? " + catGroupByStatus + " + show resolved? " + showResolved);
+
                     issueReports = iQuery.getIssueReports(
                             -1,
                             (assignedToMe ? user.getUserIdentification() : -1),
                             resultsPerPage * pageNumber,
                             resultsPerPage,
-                            true
+                            showResolved,
+                            catGroupByStatus
                     );
 
                     resultsOnPage = Math.min(issueReports.size(), resultsPerPage) + (pageNumber * resultsPerPage);
-                    resultStart = (resultsPerPage * pageNumber) + 1;
+                    resultStart = (issueReports.isEmpty() ? 0 : (resultsPerPage * pageNumber) + 1);
                 } catch (Exception e) {
                     e.printStackTrace();
                     loadError = "";
@@ -112,11 +117,23 @@ public class IssueCatalogAction extends BaseSessionAwareAction{
         return showResolved;
     }
 
+    public void setShowResolved(boolean showResolved) {
+        this.showResolved = showResolved;
+    }
+
     public boolean getAssignedToMe() {
         return assignedToMe;
     }
 
     public List<IssueReportBean> getIssueReports() {
         return issueReports;
+    }
+
+    public boolean getCatGroupByStatus(){
+        return catGroupByStatus;
+    }
+
+    public void setCatGroupByStatus(boolean catGroupByStatus) {
+        this.catGroupByStatus = catGroupByStatus;
     }
 }

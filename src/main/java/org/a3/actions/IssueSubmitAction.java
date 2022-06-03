@@ -23,14 +23,14 @@ public class IssueSubmitAction extends BaseSessionAwareAction{
 
     @Override
     public String doExecute() {
-        if (issueFiles != null){
+        /*if (issueFiles != null){
             for (int i = 0, len = issueFiles.size(); i < len; i++){
                 System.out.println(issueFiles.get(i));
                 System.out.println(issueFilesContentType.get(i));
                 System.out.println(issueFilesFileName.get(i));
             }
         }
-
+*/
         SessionManager sm = SessionManager.get();
         if (sm.isLoggedIn(userSessionObject)) {
             UserBean user = sm.getUserBean(userSessionObject);
@@ -66,6 +66,7 @@ public class IssueSubmitAction extends BaseSessionAwareAction{
                     innerResponseCode = SUCCESS;
                 }
 
+                System.out.println("inner response code: " + innerResponseCode);
                 return innerResponseCode;
             }
         }

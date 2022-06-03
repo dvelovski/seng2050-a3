@@ -6,6 +6,9 @@ import org.a3.services.SessionManager;
 import org.a3.services.constants.ResponseCodes;
 
 public class CreateIssueAction extends BaseSessionAwareAction{
+
+    private String actionError;
+
     @Override
     public String doExecute() {
         SessionManager sm = SessionManager.get();
@@ -21,5 +24,13 @@ public class CreateIssueAction extends BaseSessionAwareAction{
     }
 
     public void setReportID(String reportID) {
+    }
+
+    public String getActionError() {
+        return actionError;
+    }
+
+    public void setActionError(String actionError) {
+        this.actionError = actionError;
     }
 }

@@ -60,7 +60,17 @@ public class IssueReportsQuery extends BaseAutoCloseableQuery
         int returnCount = 0;
 
         String queryToUse = "SELECT COUNT(1) FROM IssueReports ";
-        queryToUse += (creatorID != -1 ? "WHERE createdBy = ?" : (assignedTo != -1 ? "WHERE assignedTo = ?" : "")) + (!includeResolved ? " AND issueStatus < 4" : "");
+        queryToUse += (creatorID != -1 ? "WHERE createdBy = ?" : (assignedTo != -1 ? "WHERE assignedTo = ?" : "")) ;
+
+        if (creatorID == -1 && assignedTo == -1) {
+            if (!includeResolved){
+                queryToUse += " WHERE issueStatus < 4";
+            }
+        }else{
+            if (!includeResolved){
+                queryToUse += " AND issueStatus < 4";
+            }
+        }
 
         int uidParameter = 0;
         boolean setUID = true;
@@ -74,6 +84,8 @@ public class IssueReportsQuery extends BaseAutoCloseableQuery
         }else{
             uidParameter = creatorID;
         }
+
+        //System.out.println(queryToUse);
 
         try (PreparedStatement countQuery = getConnection().prepareStatement(queryToUse)) {
             if (setUID){
@@ -90,7 +102,7 @@ public class IssueReportsQuery extends BaseAutoCloseableQuery
         return returnCount;
     }
 
-    public List<IssueReportBean> getIssueReports(int creatorID, int assignedTo, int offset, int count, boolean showResolved){
+    public List<IssueReportBean> getIssueReports(int creatorID, int assignedTo, int offset, int count, boolean showResolved, boolean groupByStatus){
         /*
             the front-end only needs
              - issueID for navigation
@@ -101,6 +113,7 @@ public class IssueReportsQuery extends BaseAutoCloseableQuery
              
              - if creatorID is -1, it'll just be any and all of them
         */
+
         List<IssueReportBean> results = new ArrayList<>();
         String queryToUse = "SELECT id, " +
                 "createdBy, " +
@@ -115,8 +128,9 @@ public class IssueReportsQuery extends BaseAutoCloseableQuery
                 "))," +
                 "(SELECT SubCategory.categoryName FROM SubCategory WHERE SubCategory.id = IR.category) " +
                 "FROM IssueReports IR " +
-                (creatorID != -1 ? "WHERE IR.createdBy = ?" : (assignedTo != -1 ? "WHERE IR.assignedTo = ?" : "")) + (!showResolved ? " AND issueStatus < 4 " : " ") +
-                "ORDER BY reportedAt DESC " +
+                (creatorID != -1 ? "WHERE IR.createdBy = ?" : (assignedTo != -1 ? "WHERE IR.assignedTo = ?" : "")) +
+                (!showResolved ? (creatorID == -1 && assignedTo == -1 ? " WHERE " : " AND ") + " issueStatus < 4 " : " ") +
+                "ORDER BY " + (groupByStatus ? "issueStatus ASC " : "reportedAt DESC ") +
                 "OFFSET " + offset + " ROWS FETCH NEXT " + count + " ROWS ONLY";
 
         int uidParameter = 0;
@@ -131,6 +145,8 @@ public class IssueReportsQuery extends BaseAutoCloseableQuery
         }else{
             uidParameter = creatorID;
         }
+
+        //System.out.println(queryToUse);
 
         try (PreparedStatement conn = getConnection().prepareStatement(queryToUse)){
             if (setUID){
